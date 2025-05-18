@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Lawal Merch</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #ffc107;
+      --primary-dark: #e0a800;
+      --bg-dark: #111;
+      --bg-darker: #000;
+      --card-bg: #1a1a1a;
+      --text-light: #fff;
+      --text-muted: #bbb;
+      --border-color: #333;
+      --success: #00ff90;
+      --error: #ff3333;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-darker);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+    }
+
+    .logo {
+      height: 80px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .back-to-shop {
+      position: absolute;
+      left: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-to-shop:hover {
+      color: var(--primary-dark);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 992px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .cart-summary, .checkout-form {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    h1, h2 {
+      color: var(--primary);
+      margin-top: 0;
+    }
+
+    .cart-items {
+      margin: 1.5rem 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .cart-item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .cart-item-details {
+      flex-grow: 1;
+    }
+
+    .cart-item-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-item-meta {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-item-price {
+      font-weight: bold;
+    }
+
+    .cart-item-remove {
+      color: var(--error);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-size: 0.9rem;
+    }
+
+    .cart-item-remove:hover {
+      text-decoration: underline;
+    }
+
+    .cart-totals {
+      margin-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .cart-total-row:last-child {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 0;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 1rem;
+      display: inline-block;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      background: var(--border-color);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
+    .empty-cart i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--border-color);
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .loading-spinner {
+      border: 5px solid var(--border-color);
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .payment-success {
+      text-align: center;
+      padding: 2rem;
+      display: none;
+    }
+
+    .payment-success i {
+      color: var(--success);
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .order-details {
+      background: var(--bg-darker);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .order-details h3 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-darker);
+      margin-top: 2rem;
+    }
+
+    .social-icons a {
+      color: var(--text-muted);
+      margin: 0 0.5rem;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .logo {
+        height: 60px;
+      }
+      
+      .back-to-shop {
+        font-size: 0.9rem;
+        left: 1rem;
+      }
+
+      .order-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-to-shop">
+      <i class="fas fa-arrow-left"></i> Continue Shopping
+    </a>
+    <div class="logo-container">
+      <img src="assets/favicon.png" alt="Lawal Merch Logo" class="logo">
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="cart-summary">
+      <h2>Your Order</h2>
+      <div class="cart-items" id="cartItems">
+        <!-- Cart items will be loaded here -->
+      </div>
+      <div class="cart-totals">
+        <div class="cart-total-row">
+          <span>Subtotal:</span>
+          <span id="subtotal">₦0</span>
+        </div>
+        <div class="cart-total-row">
+          <span>Delivery:</span>
+          <span id="shipping">₦5,822</span>
+        </div>
+        <div class="cart-total-row">
+          <span>Total:</span>
+          <span id="total">₦5,822</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="checkout-form">
+      <h2>Checkout Information</h2>
+      <form id="checkoutForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" required>
+          <div class="error-message" id="firstNameError">Please enter your first name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" required>
+          <div class="error-message" id="lastNameError">Please enter your last name</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+          <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="address">Delivery Address</label>
+          <textarea id="address" rows="3" required></textarea>
+          <div class="error-message" id="addressError">Please enter your delivery address</div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" required>
+            <div class="error-message" id="cityError">Please enter your city</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="state">State</label>
+            <select id="state" required>
+              <option value="">Select State</option>
+              <option value="Abuja FCT">Abuja FCT</option>
+              <option value="Abia">Abia</option>
+              <option value="Adamawa">Adamawa</option>
+              <option value="Akwa Ibom">Akwa Ibom</option>
+              <option value="Anambra">Anambra</option>
+              <option value="Bauchi">Bauchi</option>
+              <option value="Bayelsa">Bayelsa</option>
+              <option value="Benue">Benue</option>
+              <option value="Borno">Borno</option>
+              <option value="Cross River">Cross River</option>
+              <option value="Delta">Delta</option>
+              <option value="Ebonyi">Ebonyi</option>
+              <option value="Edo">Edo</option>
+              <option value="Ekiti">Ekiti</option>
+              <option value="Enugu">Enugu</option>
+              <option value="Gombe">Gombe</option>
+              <option value="Imo">Imo</option>
+              <option value="Jigawa">Jigawa</option>
+              <option value="Kaduna">Kaduna</option>
+              <option value="Kano">Kano</option>
+              <option value="Katsina">Katsina</option>
+              <option value="Kebbi">Kebbi</option>
+              <option value="Kogi">Kogi</option>
+              <option value="Kwara">Kwara</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Nassarawa">Nassarawa</option>
+              <option value="Niger">Niger</option>
+              <option value="Ogun">Ogun</option>
+              <option value="Ondo">Ondo</option>
+              <option value="Osun">Osun</option>
+              <option value="Oyo">Oyo</option>
+              <option value="Plateau">Plateau</option>
+              <option value="Rivers">Rivers</option>
+              <option value="Sokoto">Sokoto</option>
+              <option value="Taraba">Taraba</option>
+              <option value="Yobe">Yobe</option>
+              <option value="Zamfara">Zamfara</option>
+            </select>
+            <div class="error-message" id="stateError">Please select your state</div>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn" id="payButton" disabled>Proceed to Payment</button>
+      </form>
+      
+      <div class="payment-success" id="paymentSuccess">
+        <i class="fas fa-check-circle"></i>
+        <h2>Payment Successful!</h2>
+        <p>Thank you for your order. Your payment has been processed successfully.</p>
+        <p>A confirmation has been sent to your email.</p>
+        
+        <div class="order-details" id="orderDetails">
+          <h3>Order Summary</h3>
+          <div id="orderSummary">
+            <!-- Order details will be inserted here -->
+          </div>
+          <div class="order-total">
+            <div class="order-item">
+              <span>Total:</span>
+              <span id="orderTotal">₦0</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="order-actions">
+          <button class="btn" onclick="downloadOrderReceipt()">
+            <i class="fas fa-download"></i> Download Receipt
+          </button>
+          <a href="index.html" class="btn btn-outline">
+            <i class="fas fa-store"></i> Back to Shop
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://facebook.com/actuallawal" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://instagram.com/actuallawal" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://tiktok.com/@actuallawal" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://youtube.com/@actuallawal" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p style="color: var(--text-muted); margin-top: 1rem;">&copy; 2025 Lawal Merch. All rights reserved.</p>
+  </footer>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    // Load cart items from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartItemsContainer = document.getElementById('cartItems');
+      const subtotalElement = document.getElementById('subtotal');
+      const shippingElement = document.getElementById('shipping');
+      const totalElement = document.getElementById('total');
+      const payButton = document.getElementById('payButton');
+      
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+          <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Your cart is empty</p>
+            <a href="index.html" class="btn">Continue Shopping</a>
+          </div>
+        `;
+        payButton.disabled = true;
+        return;
+      }
+      
+      // Calculate totals
+      let subtotal = 0;
+      
+      // Render cart items
+      cartItemsContainer.innerHTML = '';
+      cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+        
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item';
+        itemElement.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='assets/placeholder.jpg'">
+          <div class="cart-item-details">
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-meta">
+              ${item.colorName} ${item.size ? '| Size: ' + item.size : ''} | Qty: ${item.quantity}
+            </div>
+            <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+            <button class="cart-item-remove" onclick="removeItem(${item.id}, '${item.color}', '${item.size}')">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+        `;
+        
+        cartItemsContainer.appendChild(itemElement);
+      });
+      
+      const shipping = 5822; // New flat rate shipping cost
+      const total = subtotal + shipping;
+      
+      subtotalElement.textContent = `₦${subtotal.toLocaleString()}`;
+      shippingElement.textContent = `₦${shipping.toLocaleString()}`;
+      totalElement.textContent = `₦${total.toLocaleString()}`;
+      
+      // Enable pay button if cart has items
+      payButton.disabled = cart.length === 0;
+    });
+    
+    // Remove item from cart
+    function removeItem(id, color, size) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart = cart.filter(item => !(item.id === id && item.color === color && item.size === size));
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Reload the page to update the display
+      location.reload();
+    }
+    
+    // Form validation
+    const form = document.getElementById('checkoutForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+      
+      // Validate form fields
+      let isValid = true;
+      const email = document.getElementById('email');
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const phone = document.getElementById('phone');
+      const address = document.getElementById('address');
+      const city = document.getElementById('city');
+      const state = document.getElementById('state');
+      
+      if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        document.getElementById('emailError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!firstName.value) {
+        document.getElementById('firstNameError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!lastName.value) {
+        document.getElementById('lastNameError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!phone.value || !/^[0-9]{11}$/.test(phone.value)) {
+        document.getElementById('phoneError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!address.value) {
+        document.getElementById('addressError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!city.value) {
+        document.getElementById('cityError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (!state.value) {
+        document.getElementById('stateError').style.display = 'block';
+        isValid = false;
+      }
+      
+      if (isValid) {
+        processPayment();
+      }
+    });
+    
+    // Process payment with Paystack
+    function processPayment() {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalElement = document.getElementById('total');
+      const totalAmount = parseInt(totalElement.textContent.replace(/[^\d]/g, '')) * 100; // Convert to kobo
+      
+      if (cart.length === 0) {
+        alert('Your cart is empty');
+        return;
+      }
+      
+      loadingOverlay.style.display = 'flex';
+      
+      // Generate a unique order reference
+      const orderRef = 'LM' + Date.now();
+      
+      const handler = PaystackPop.setup({
+        key: 'pk_test_3fe70f42dfb8c3d8dc51378fc21f0367a612ac41', // Your public key
+        email: document.getElementById('email').value,
+        amount: totalAmount,
+        currency: 'NGN',
+        ref: orderRef,
+        firstname: document.getElementById('firstName').value,
+        lastname: document.getElementById('lastName').value,
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Phone",
+              variable_name: "phone",
+              value: document.getElementById('phone').value
+            },
+            {
+              display_name: "Delivery Address",
+              variable_name: "address",
+              value: document.getElementById('address').value + ', ' + 
+                    document.getElementById('city').value + ', ' + 
+                    document.getElementById('state').value
+            },
+            {
+              display_name: "Order Reference",
+              variable_name: "order_ref",
+              value: orderRef
+            }
+          ]
+        },
+        callback: function(response) {
+          // Payment successful
+          loadingOverlay.style.display = 'none';
+          
+          // Show success message and order details
+          showOrderSuccess(cart, orderRef, totalElement.textContent);
+          
+          // Clear the cart
+          localStorage.setItem('cart', JSON.stringify([]));
+        },
+        onClose: function() {
+          // User closed payment modal
+          loadingOverlay.style.display = 'none';
+          alert('Payment window closed. You can try again.');
+        }
+      });
+      
+      handler.openIframe();
+    }
+    
+    // Show order success with details
+    function showOrderSuccess(cart, orderRef, totalAmount) {
+      // Hide the form
+      document.getElementById('checkoutForm').style.display = 'none';
+      
+      // Show the success section
+      const successSection = document.getElementById('paymentSuccess');
+      successSection.style.display = 'block';
+
+      // Calculate subtotal
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      
+      // Update order summary display
+      const orderSummary = document.getElementById('orderSummary');
+      orderSummary.innerHTML = `
+        <div class="order-item">
+          <span>Order #:</span>
+          <span>${orderRef}</span>
+        </div>
+        <div class="order-item">
+          <span>Date:</span>
+          <span>${new Date().toLocaleDateString()}</span>
+        </div>
+        <div class="order-item">
+          <span>Subtotal:</span>
+          <span>₦${subtotal.toLocaleString()}</span>
+        </div>
+        <div class="order-item">
+          <span>Delivery:</span>
+          <span>₦5,822</span>
+        </div>
+      `;
+      
+      document.getElementById('orderTotal').textContent = totalAmount;
+
+      // Save order to localStorage (for admin access)
+      const order = {
+        id: orderRef,
+        date: new Date().toISOString(),
+        customer: {
+          name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: `${document.getElementById('address').value}, ${document.getElementById('city').value}, ${document.getElementById('state').value}`
+        },
+        items: cart.map(item => ({
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          color: item.color,
+          colorName: item.colorName,
+          size: item.size,
+          image: item.image
+        })),
+        amount: parseInt(totalAmount.replace(/[^\d]/g, '')),
+        shipping: 5822,
+        status: 'pending',
+        paymentMethod: 'Paystack'
+      };
+
+      // Save to localStorage
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+    }
+    
+    // Download order receipt as text file
+    function downloadOrderReceipt() {
+      const orderDetails = document.getElementById('orderDetails');
+      const orderText = `
+Lawal Merch - Order Receipt
+===========================
+
+Order #: ${document.querySelector('#orderSummary .order-item:first-child span:last-child').textContent}
+Date: ${document.querySelector('#orderSummary .order-item:nth-child(2) span:last-child').textContent}
+
+Customer Information:
+--------------------
+Name: ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}
+Email: ${document.getElementById('email').value}
+Phone: ${document.getElementById('phone').value}
+Delivery Address: ${document.getElementById('address').value}, ${document.getElementById('city').value}, ${document.getElementById('state').value}
+
+Order Items:
+-----------
+${Array.from(document.querySelectorAll('#orderSummary h3 ~ .order-item')).map(item => {
+  return `${item.querySelector('span:first-child').textContent} - ${item.querySelector('span:last-child').textContent}`;
+}).join('\n')}
+
+Total: ${document.getElementById('orderTotal').textContent}
+
+Thank you for shopping with Lawal Merch!
+      `;
+      
+      // Create download link
+      const blob = new Blob([orderText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lawal-merch-order-${document.querySelector('#orderSummary .order-item:first-child span:last-child').textContent}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    }
+  </script>
+</body>
+</html>

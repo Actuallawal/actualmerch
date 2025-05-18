@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawal Merch</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+     :root {
+      --primary: #ffc107;
+      --primary-dark: #e0a800;
+      --bg-dark: #111;
+      --bg-darker: #000;
+      --card-bg: #1a1a1a;
+      --text-light: #fff;
+      --text-muted: #bbb;
+      --border-color: #333;
+      --success: #00ff90;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-darker);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+    }
+
+    .logo {
+      height: 100px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .cart-icon-container {
+      position: absolute;
+      right: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 2.3rem;
+      color: var(--primary);
+      transition: all 0.3s ease;
+      padding: 0.5rem;
+    }
+
+    .cart-icon:hover {
+      transform: scale(1.1);
+      color: var(--primary-dark);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--primary);
+      color: #000;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      border: 2px solid var(--bg-darker);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/hero-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      padding: 0 1rem;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-content p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 1rem;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-large {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background: var(--primary);
+      transition: all 0.3s ease;
+    }
+
+    .btn-large:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    /* Promo Banner */
+    .promo-banner {
+      background: var(--primary);
+      color: black;
+      text-align: center;
+      padding: 0.75rem;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
+      border-color: var(--primary);
+    }
+
+    .product-image-container {
+      width: 100%;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .product img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Badges */
+    .stock-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff3333;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--primary);
+      color: black;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .bestseller-badge {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+      background: #4CAF50;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    /* Color Options */
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .color-option.selected {
+      border-color: var(--primary);
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    }
+
+    /* Size Options */
+    .size-options {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .size-option {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .size-option.selected {
+      background: var(--primary);
+      color: black;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+
+    .size-option:hover:not(.selected) {
+      border-color: var(--text-muted);
+    }
+
+    .product-details {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      min-height: 20px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 4rem 2rem;
+      background: var(--bg-darker);
+      text-align: center;
+    }
+
+    .testimonials h2 {
+      margin-bottom: 3rem;
+      font-size: 2rem;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .testimonial {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: left;
+    }
+
+    .testimonial-content {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-content i {
+      color: var(--primary);
+      font-size: 2rem;
+      opacity: 0.3;
+      position: absolute;
+      top: -10px;
+      left: -10px;
+    }
+
+    .testimonial-content p {
+      padding-left: 2rem;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .testimonial-author img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .close-modal:hover {
+      color: var(--primary);
+    }
+
+    .modal-product {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .modal-image-container {
+      width: 100%;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    .modal-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-description {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Add to Cart Notification */
+    .add-to-cart-notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: black;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .add-to-cart-notification.show {
+      opacity: 1;
+    }
+
+    /* Loading Skeletons */
+    @keyframes shimmer {
+      0% { background-position: -468px 0 }
+      100% { background-position: 468px 0 }
+    }
+
+    .skeleton-loading {
+      animation-duration: 1.5s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-name: shimmer;
+      animation-timing-function: linear;
+      background: linear-gradient(to right, #1a1a1a 8%, #222 18%, #1a1a1a 33%);
+      background-size: 800px 104px;
+      position: relative;
+    }
+
+    .skeleton-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: #222;
+      margin-bottom: 1rem;
+    }
+
+    .skeleton-text {
+      height: 20px;
+      width: 80%;
+      background: #222;
+      margin: 0.5rem auto;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: var(--bg-darker);
+      margin-top: 2rem;
+    }
+
+    .social-icons a {
+      color: var(--text-muted);
+      margin: 0 0.5rem;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero {
+        height: 50vh;
+      }
+      
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-content p {
+        font-size: 1.2rem;
+      }
+      
+      .modal-product {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        padding: 1rem;
+        gap: 1rem;
+      }
+      
+      .product {
+        padding: 1rem;
+      }
+      
+      .logo {
+        height: 80px;
+      }
+      
+      .cart-icon {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="assets/favicon.png" alt="Lawal Merch Logo" class="logo">
+    </div>
+    <div class="cart-icon-container">
+      <div class="cart-icon" onclick="window.location.href='checkout.html'">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Premium Streetwear for the Bold</h1>
+      <p>Limited edition designs that make a statement</p>
+      <button class="btn btn-large" onclick="document.getElementById('productGrid').scrollIntoView({behavior: 'smooth'})">
+        Shop Now <i class="fas fa-arrow-down"></i>
+      </button>
+    </div>
+  </section>
+
+  <div class="promo-banner">
+    <span>🔥 LIMITED TIME OFFER: Free shipping on orders over ₦250,000! 🔥</span>
+  </div>
+
+  <main>
+    <h1 style="text-align: center; margin-top: 2rem;">Our Products</h1>
+    
+    <div class="product-grid" id="productGrid">
+      <!-- Loading skeletons before products load -->
+      <div class="product">
+        <div class="skeleton-image skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 60%"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 70%; height: 40px; margin-top: 1rem;"></div>
+      </div>
+      <div class="product">
+        <div class="skeleton-image skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 60%"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 70%; height: 40px; margin-top: 1rem;"></div>
+      </div>
+      <div class="product">
+        <div class="skeleton-image skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 60%"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 70%; height: 40px; margin-top: 1rem;"></div>
+      </div>
+      <div class="product">
+        <div class="skeleton-image skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 60%"></div>
+        <div class="skeleton-text skeleton-loading" style="width: 70%; height: 40px; margin-top: 1rem;"></div>
+      </div>
+    </div>
+  </main>
+
+  <section class="testimonials">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>The quality Mad o! I get compliments every time.</p>
+        </div>
+        <div class="testimonial-author">
+          <img src="assets/customer1.jpg" alt="Customer" onerror="this.src='assets/placeholder.jpg'">
+          <span>James O.</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>Omo! E sharp, worth every naira!</p>
+        </div>
+        <div class="testimonial-author">
+          <img src="assets/customer2.jpg" alt="Customer" onerror="this.src='assets/placeholder.jpg'">
+          <span>Amina Y.</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>Fast fast I don receive am. Omo!</p>
+        </div>
+        <div class="testimonial-author">
+          <img src="assets/customer3.jpg" alt="Customer" onerror="this.src='assets/placeholder.jpg'">
+          <span>Ibrahim S.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://facebook.com/actuallawal" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://instagram.com/actuallawal" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://tiktok.com/@actuallawal" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://youtube.com/@actuallawal" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p style="color: var(--text-muted); margin-top: 1rem;">&copy; 2025 Lawal Merch. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Product database - Add your products here
+    const products = [
+      {
+        id: 1,
+        name: "Premium 6Faces Top",
+        price: 33978,
+        image: "https://i.ibb.co/5hKZMgZ4/TopBH.jpg",
+        description: "High-quality streetwear top with unique 6Faces design. Made from premium cotton blend for comfort and durability.",
+        stock: 5,
+        featured: true,
+        colorImages: {
+          "#000000": "https://i.ibb.co/5hKZMgZ4/TopBH.jpg",
+          "#FFFFFF": "https://i.ibb.co/1YR7G2GQ/TopWH.jpg"
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      },
+      {
+        id: 2,
+        name: "Premium Cash Top",
+        price: 33979,
+        image: "https://i.ibb.co/LD1X6d0B/TopBC.jpg",
+        description: "Exclusive cash-themed design with premium stitching. Perfect for making a bold fashion statement.",
+        stock: 8,
+        bestSeller: true,
+        colorImages: {
+          "#000000": "https://i.ibb.co/LD1X6d0B/TopBC.jpg",
+          "#FFFFFF": "https://i.ibb.co/1fmbxLMC/TopWC.jpg"
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      },
+      {
+        id: 3,
+        name: "Premium Tank 6Faces",
+        price: 30969,
+        image: "https://i.ibb.co/nsJd2V7m/TankBH.jpg",
+        description: "Lightweight and breathable tank top featuring the iconic 6Faces design. Ideal for hot weather.",
+        stock: 3,
+        colorImages: {
+          "#000000": "https://i.ibb.co/nsJd2V7m/TankBH.jpg",
+          "#FFFFFF": "https://i.ibb.co/RGXVNjby/TankWH.jpg"
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      },
+      {
+        id: 4,
+        name: "Premium Tank Cash",
+        price: 30968,
+        image: "https://i.ibb.co/1GrSJrKt/TankBC.jpg",
+        description: "Sleek cash-themed tank top with premium fabric that keeps you cool and comfortable all day.",
+        stock: 3,
+        featured: true,
+        colorImages: {
+          "#000000": "https://i.ibb.co/1GrSJrKt/TankBC.jpg",
+          "#FFFFFF": "https://i.ibb.co/qMxQtXZh/TankWC.jpg"
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      },
+      {
+        id: 5,
+        name: "Premium Hoodie Cash",
+        price: 34891,
+        image: "https://i.ibb.co/Gf0wdnDm/HoodieBC.jpg",
+        description: "Lightweight and breathable Hoodie featuring the iconic 6Faces design. Ideal for hot weather.",
+        stock: 5,
+        colorImages: {
+          "#000000": "https://i.ibb.co/Gf0wdnDm/HoodieBC.jpg",
+          "#FFFFFF": "https://i.ibb.co/Rk1wNQW5/HoodieWC.jpg",
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      },
+      {
+        id: 6,
+        name: "Premium Hoodie 6Faces",
+        price: 34891,
+        image: "https://i.ibb.co/dyGwpwF/HoodieBH.jpg",
+        description: "Sleek cash-themed Hoodie with premium fabric that keeps you cool and comfortable all day.",
+        stock: 6,
+        colorImages: {
+          "#000000": "https://i.ibb.co/dyGwpwF/HoodieBH.jpg",
+          "#FFFFFF": "https://i.ibb.co/rK0MSzc1/HoodieWH.jpg"
+        },
+        colors: ["#000000", "#FFFFFF"],
+        sizes: ["L", "XL"]
+      }
+    ];
+
+    // Initialize cart if empty
+    if (!localStorage.getItem('cart')) {
+      localStorage.setItem('cart', JSON.stringify([]));
+    }
+
+    // Update cart count on page load
+    updateCartCount();
+
+    // Load products dynamically
+    document.addEventListener('DOMContentLoaded', function() {
+      const productGrid = document.getElementById('productGrid');
+      
+      // Remove all skeleton elements
+      productGrid.innerHTML = '';
+      
+      products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.className = 'product';
+        productElement.setAttribute('data-id', product.id);
+        
+        productElement.innerHTML = `
+          <div class="product-image-container" onclick="showQuickView(${product.id})">
+            <img src="${product.image}" alt="${product.name}" id="product-image-${product.id}" onerror="this.src='assets/placeholder.jpg'">
+            ${product.stock < 10 ? `<div class="stock-badge">Only ${product.stock} left!</div>` : ''}
+            ${product.featured ? `<div class="featured-badge">Featured</div>` : ''}
+            ${product.bestSeller ? `<div class="bestseller-badge">Bestseller</div>` : ''}
+          </div>
+          <h3 onclick="showQuickView(${product.id})" style="cursor: pointer;">${product.name}</h3>
+          <p>₦${product.price.toLocaleString()}</p>
+          
+          <div class="color-options" id="colors-${product.id}">
+            ${product.colors.map(color => `
+              <div class="color-option" 
+                   style="background-color: ${color}" 
+                   data-color="${color}" 
+                   onclick="selectColor(${product.id}, '${color}')"
+                   title="${getColorName(color)}"></div>
+            `).join('')}
+          </div>
+          
+          <div class="size-options" id="sizes-${product.id}" style="display: ${product.sizes.length > 1 ? 'flex' : 'none'}">
+            ${product.sizes.map(size => `
+              <div class="size-option" 
+                   data-size="${size}" 
+                   onclick="selectSize(${product.id}, '${size}')">${size}</div>
+            `).join('')}
+          </div>
+          
+          <div class="product-details" id="details-${product.id}">
+            Color: Not selected ${product.sizes.length > 1 ? '| Size: Not selected' : ''}
+          </div>
+          
+          <button class="btn" onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+        
+        productGrid.appendChild(productElement);
+        
+        // Auto-select first color and size options
+        if (product.colors.length > 0) {
+          const firstColor = product.colors[0];
+          selectColor(product.id, firstColor);
+        }
+        if (product.sizes.length > 0) {
+          const firstSize = product.sizes[0];
+          selectSize(product.id, firstSize);
+        }
+      });
+    });
+
+    // Color selection function
+    function selectColor(productId, color) {
+      // Remove selected class from all color options for this product
+      const colorOptions = document.querySelectorAll(`#colors-${productId} .color-option`);
+      colorOptions.forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked color
+      const selectedOption = document.querySelector(`#colors-${productId} .color-option[data-color="${color}"]`);
+      if (selectedOption) {
+        selectedOption.classList.add('selected');
+      }
+      
+      // Store selected color for this product
+      if (!window.selectedColors) window.selectedColors = {};
+      window.selectedColors[productId] = color;
+      
+      // Update product image based on selected color
+      const product = products.find(p => p.id === productId);
+      if (product && product.colorImages && product.colorImages[color]) {
+        document.getElementById(`product-image-${productId}`).src = product.colorImages[color];
+      }
+      
+      // Update product details
+      updateProductDetails(productId);
+    }
+
+    // Size selection function
+    function selectSize(productId, size) {
+      const sizeOptions = document.querySelectorAll(`#sizes-${productId} .size-option`);
+      sizeOptions.forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.size === size) {
+          option.classList.add('selected');
+        }
+      });
+      
+      if (!window.selectedSizes) window.selectedSizes = {};
+      window.selectedSizes[productId] = size;
+      
+      updateProductDetails(productId);
+    }
+
+    // Update product details text
+    function updateProductDetails(productId) {
+      const color = window.selectedColors?.[productId];
+      const size = window.selectedSizes?.[productId];
+      const product = products.find(p => p.id === productId);
+      
+      let detailsText = `Color: ${color ? getColorName(color) : 'Not selected'}`;
+      if (product.sizes.length > 1) {
+        detailsText += ` | Size: ${size || 'Not selected'}`;
+      }
+      
+      document.getElementById(`details-${productId}`).textContent = detailsText;
+    }
+
+    // Helper function to get color name from hex
+    function getColorName(hex) {
+      const colorMap = {
+        "#000000": "Black",
+        "#FFFFFF": "White",
+        "#FF0000": "Red",
+        "#0000FF": "Blue",
+        "#008000": "Green",
+        "#808080": "Gray",
+        "#800000": "Maroon",
+        "#000080": "Navy",
+        "#FFA500": "Orange",
+        "#964B00": "Brown",
+        "#1b7343": "Green"
+      };
+      return colorMap[hex] || hex;
+    }
+
+    // Quick View Modal
+    function showQuickView(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const selectedColor = window.selectedColors?.[productId] || product.colors[0];
+      const selectedSize = window.selectedSizes?.[productId] || (product.sizes.length > 0 ? product.sizes[0] : null);
+      
+      const modalHTML = `
+        <div class="modal-overlay" id="quickViewModal">
+          <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-product">
+              <div class="modal-image-container">
+                <img src="${product.colorImages[selectedColor]}" alt="${product.name}" onerror="this.src='assets/placeholder.jpg'">
+              </div>
+              <div class="modal-details">
+                <h2>${product.name}</h2>
+                <p class="price">₦${product.price.toLocaleString()}</p>
+                
+                <div class="color-options">
+                  ${product.colors.map(color => `
+                    <div class="color-option ${color === selectedColor ? 'selected' : ''}" 
+                         style="background-color: ${color}" 
+                         onclick="updateModalColor('${productId}', '${color}')"
+                         title="${getColorName(color)}"></div>
+                  `).join('')}
+                </div>
+                
+                ${product.sizes.length > 1 ? `
+                <div class="size-options" style="margin: 1rem 0;">
+                  ${product.sizes.map(size => `
+                    <div class="size-option ${size === selectedSize ? 'selected' : ''}" 
+                         data-size="${size}" 
+                         onclick="updateModalSize('${productId}', '${size}')">${size}</div>
+                  `).join('')}
+                </div>
+                ` : ''}
+                
+                <p>Color: ${getColorName(selectedColor)} ${product.sizes.length > 1 ? `| Size: ${selectedSize}` : ''}</p>
+                
+                <button class="btn" onclick="addToCart(${productId}); closeModal()" style="width: 100%; margin-top: 1.5rem;">
+                  Add to Cart
+                </button>
+                
+                <div class="product-description">
+                  <h3>Description</h3>
+                  <p>${product.description || 'Premium quality streetwear with unique designs.'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('quickViewModal');
+      if (modal) modal.remove();
+    }
+
+    function updateModalColor(productId, color) {
+      selectColor(productId, color);
+      const modalImg = document.querySelector('#quickViewModal .modal-image-container img');
+      const product = products.find(p => p.id === productId);
+      modalImg.src = product.colorImages[color];
+      
+      // Update selected color in modal
+      document.querySelectorAll('#quickViewModal .color-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.style.backgroundColor === color) {
+          option.classList.add('selected');
+        }
+      });
+      
+      // Update details text in modal
+      const selectedSize = window.selectedSizes?.[productId];
+      const detailsText = `Color: ${getColorName(color)}${product.sizes.length > 1 ? ` | Size: ${selectedSize || 'Not selected'}` : ''}`;
+      document.querySelector('#quickViewModal .modal-details p:nth-of-type(2)').textContent = detailsText;
+    }
+
+    function updateModalSize(productId, size) {
+      selectSize(productId, size);
+      
+      // Update selected size in modal
+      document.querySelectorAll('#quickViewModal .size-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.size === size) {
+          option.classList.add('selected');
+        }
+      });
+      
+      // Update details text in modal
+      const selectedColor = window.selectedColors?.[productId];
+      document.querySelector('#quickViewModal .modal-details p:nth-of-type(2)').textContent = 
+        `Color: ${getColorName(selectedColor)} | Size: ${size}`;
+    }
+
+    // Add to cart function with animation
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const selectedColor = window.selectedColors?.[productId];
+      if (!selectedColor) {
+        alert("Please select a color first!");
+        return;
+      }
+      
+      const selectedSize = window.selectedSizes?.[productId] || (product.sizes.length === 1 ? product.sizes[0] : null);
+      if (product.sizes.length > 1 && !selectedSize) {
+        alert("Please select a size first!");
+        return;
+      }
+      
+      let cart = JSON.parse(localStorage.getItem('cart'));
+      
+      // Check if item with same ID, color and size already exists in cart
+      const existingItem = cart.find(item => 
+        item.id === productId && 
+        item.color === selectedColor && 
+        (!product.sizes.length > 1 || item.size === selectedSize)
+      );
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productId,
+          name: product.name,
+          price: product.price,
+          image: product.colorImages ? product.colorImages[selectedColor] : product.image,
+          color: selectedColor,
+          colorName: getColorName(selectedColor),
+          size: selectedSize,
+          quantity: 1
+        });
+      }
+      
+      // Create flying cart animation
+      const productElement = document.querySelector(`.product[data-id="${productId}"]`);
+      if (productElement) {
+        const btn = productElement.querySelector('.btn');
+        const clone = btn.cloneNode(true);
+        clone.textContent = '✓ Added';
+        clone.style.position = 'fixed';
+        clone.style.zIndex = '1000';
+        clone.style.transition = 'all 0.5s cubic-bezier(0.65, 0, 0.35, 1)';
+        clone.style.pointerEvents = 'none';
+        
+        const btnRect = btn.getBoundingClientRect();
+        clone.style.left = `${btnRect.left}px`;
+        clone.style.top = `${btnRect.top}px`;
+        document.body.appendChild(clone);
+        
+        setTimeout(() => {
+          const cartIcon = document.querySelector('.cart-icon');
+          const cartRect = cartIcon.getBoundingClientRect();
+          clone.style.left = `${cartRect.left + cartRect.width/2 - btnRect.width/2}px`;
+          clone.style.top = `${cartRect.top + cartRect.height/2 - btnRect.height/2}px`;
+          clone.style.transform = 'scale(0.2)';
+          clone.style.opacity = '0.5';
+          clone.style.backgroundColor = 'var(--success)';
+        }, 10);
+        
+        setTimeout(() => {
+          clone.remove();
+          // Proceed with adding to cart
+          localStorage.setItem('cart', JSON.stringify(cart));
+          updateCartCount();
+          
+          // Show added notification
+          showAddToCartNotification(product.name, getColorName(selectedColor), selectedSize);
+        }, 500);
+      } else {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        showAddToCartNotification(product.name, getColorName(selectedColor), selectedSize);
+      }
+    }
+
+    function showAddToCartNotification(productName, colorName, size) {
+      const notification = document.createElement('div');
+      notification.className = 'add-to-cart-notification';
+      notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${productName} (${colorName}${size ? `, Size: ${size}` : ''}) added to cart!</span>
+      `;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart'));
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = totalItems;
+    }
+  </script>
+</body>
+</html>

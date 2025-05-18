@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Lawal Merch</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    :root {
+      --primary: #ffc107;
+      --primary-dark: #e0a800;
+      --bg-dark: #111;
+      --bg-darker: #000;
+      --card-bg: #1a1a1a;
+      --text-light: #fff;
+      --text-muted: #bbb;
+      --border-color: #333;
+      --success: #00ff90;
+      --danger: #ff4444;
+      --info: #17a2b8;
+      --warning: #ff9800;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: var(--bg-darker);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-info i {
+      font-size: 1.5rem;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background: var(--bg-darker);
+      position: fixed;
+      height: 100vh;
+      padding: 1.5rem 0;
+      transition: all 0.3s;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+    }
+
+    .sidebar nav li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .sidebar nav a:hover {
+      color: var(--primary);
+      background: rgba(255, 193, 7, 0.1);
+    }
+
+    .sidebar nav a i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar nav li.active a {
+      color: var(--primary);
+      background: rgba(255, 193, 7, 0.2);
+      border-left: 3px solid var(--primary);
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      margin-left: 250px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card h3 {
+      margin-top: 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    .stat-card p {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 0.5rem 0 0;
+      color: var(--primary);
+    }
+
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 0.8rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(255, 193, 7, 0.1);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Placeholder Sections */
+    .placeholder-section {
+      text-align: center;
+      padding: 3rem;
+      background: var(--card-bg);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Recent Activity */
+    .recent-activity {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+    }
+
+    .activity-list {
+      margin-top: 1rem;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+
+    .search-input {
+      flex-grow: 1;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-darker);
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .filter-select {
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-darker);
+      color: var(--text-light);
+      min-width: 150px;
+      font-size: 0.9rem;
+    }
+
+    /* Table Styles */
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 0.9rem;
+    }
+
+    .orders-table th, 
+    .orders-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .orders-table th {
+      background-color: var(--primary);
+      color: #000;
+      font-weight: bold;
+    }
+
+    .orders-table tr:hover {
+      background-color: var(--bg-darker);
+    }
+
+    .order-items {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .status-paid {
+      background-color: var(--success);
+      color: #000;
+    }
+
+    .status-pending {
+      background-color: #ffcc00;
+      color: #000;
+    }
+
+    .status-shipped {
+      background-color: var(--info);
+      color: #000;
+    }
+
+    .status-cancelled {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .status-archived {
+      background-color: var(--warning);
+      color: #000;
+    }
+
+    /* Buttons */
+    .btn {
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #cc0000;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: #000;
+    }
+
+    .btn-success:hover {
+      background: #00cc77;
+    }
+
+    .btn-info {
+      background: var(--info);
+      color: #000;
+    }
+
+    .btn-info:hover {
+      background: #138496;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: #000;
+    }
+
+    .btn-warning:hover {
+      background: #e68a00;
+    }
+
+    /* Login Form */
+    .login-form {
+      max-width: 400px;
+      margin: 5rem auto;
+      padding: 2rem;
+      background: var(--card-bg);
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .login-form h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-darker);
+      color: var(--text-light);
+      font-size: 1rem;
+    }
+
+    .login-form button {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    /* Download Buttons */
+    .download-btns {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Color Display */
+    .color-swatch {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 5px;
+      border: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .item-details {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    /* Archive Section */
+    .archive-section {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+    }
+
+    .archive-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--primary);
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 400px;
+      cursor: pointer;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .notification i.fa-bell {
+      font-size: 1.5rem;
+    }
+
+    .notification i.fa-times {
+      margin-left: auto;
+      cursor: pointer;
+    }
+
+    .notification-content {
+      flex-grow: 1;
+    }
+
+    .notification-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .notification-message {
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+        overflow: hidden;
+      }
+      
+      .sidebar nav a span {
+        display: none;
+      }
+      
+      .main-content {
+        margin-left: 70px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .sidebar {
+        position: fixed;
+        width: 250px;
+        left: -250px;
+      }
+      
+      .sidebar.active {
+        left: 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .controls {
+        flex-direction: column;
+      }
+      
+      .archive-controls {
+        flex-direction: column;
+      }
+      
+      .search-input,
+      .filter-select {
+        width: 100%;
+      }
+
+      .notification {
+        max-width: 300px;
+        right: 10px;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      header {
+        padding: 1rem;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .orders-table {
+        font-size: 0.8rem;
+      }
+      
+      .orders-table th,
+      .orders-table td {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Simple Password Protection -->
+  <div id="loginSection" class="login-form" style="display: none;">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPassword" placeholder="Enter admin password">
+    <button class="btn btn-primary" onclick="checkPassword()">Login</button>
+  </div>
+
+  <!-- Main Admin Content (hidden by default) -->
+  <div id="adminContent" style="display: none;">
+    <header>
+      <div class="header-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <img src="assets/favicon.png" alt="Lawal Merch" height="40">
+        <h2>Admin Dashboard</h2>
+      </div>
+      <div class="header-right">
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span>Admin</span>
+        </div>
+        <button class="btn btn-danger" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+      <nav>
+        <ul>
+          <li class="active"><a href="#" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+          <li><a href="#" data-tab="orders"><i class="fas fa-shopping-bag"></i> <span>Orders</span></a></li>
+          <li><a href="#" data-tab="products"><i class="fas fa-tshirt"></i> <span>Products</span></a></li>
+          <li><a href="#" data-tab="customers"><i class="fas fa-users"></i> <span>Customers</span></a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="main-content" id="mainContent">
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+        <button class="tab-btn" data-tab="orders"><i class="fas fa-shopping-bag"></i> Orders</button>
+        <button class="tab-btn" data-tab="products"><i class="fas fa-tshirt"></i> Products</button>
+        <button class="tab-btn" data-tab="customers"><i class="fas fa-users"></i> Customers</button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-pane active">
+          <div class="stats-container">
+            <div class="stat-card">
+              <h3>Total Orders</h3>
+              <p id="totalOrders">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Total Revenue</h3>
+              <p id="totalRevenue">₦0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Pending Orders</h3>
+              <p id="pendingOrders">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Completed Orders</h3>
+              <p id="completedOrders">0</p>
+            </div>
+          </div>
+
+          <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div class="activity-list" id="activityList">
+              <p>No recent activity</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders-tab" class="tab-pane">
+          <div class="admin-container">
+            <div class="controls">
+              <input type="text" class="search-input" placeholder="Search orders..." id="searchInput">
+              <select class="filter-select" id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="shipped">Shipped</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="archived">Archived</option>
+              </select>
+              <select class="filter-select" id="dateFilter">
+                <option value="">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+            </div>
+
+            <div class="download-btns">
+              <button class="btn btn-success" onclick="downloadCSV()">
+                <i class="fas fa-file-excel"></i> Download Excel
+              </button>
+              <button class="btn btn-danger" onclick="downloadPDF()">
+                <i class="fas fa-file-pdf"></i> Download PDF
+              </button>
+              <button class="btn btn-info" onclick="syncWithGoogleSheets()">
+                <i class="fas fa-sync-alt"></i> Sync with Google Sheets
+              </button>
+              <button class="btn btn-warning" onclick="confirmArchiveOrders()">
+                <i class="fas fa-archive"></i> Archive Orders
+              </button>
+              <button class="btn btn-danger" onclick="confirmClearOrders()">
+                <i class="fas fa-trash-alt"></i> Clear All Orders
+              </button>
+            </div>
+
+            <table class="orders-table" id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Orders will be loaded here -->
+              </tbody>
+            </table>
+
+            <div class="archive-section">
+              <h3>Archive Management</h3>
+              <p>Archived orders are kept for record-keeping but are hidden from normal views.</p>
+              <div class="archive-controls">
+                <button class="btn btn-info" onclick="restoreArchivedOrders()">
+                  <i class="fas fa-undo"></i> Restore Archived Orders
+                </button>
+                <button class="btn btn-danger" onclick="confirmDeleteArchived()">
+                  <i class="fas fa-trash"></i> Permanently Delete Archived
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products-tab" class="tab-pane">
+          <div class="admin-container">
+            <div class="section-header">
+              <h2>Product Management</h2>
+              <button class="btn btn-primary" onclick="showAddProductModal()">
+                <i class="fas fa-plus"></i> Add Product
+              </button>
+            </div>
+            <div class="placeholder-section">
+              <i class="fas fa-tshirt" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+              <h3>Product Management Coming Soon</h3>
+              <p>This section will allow you to manage your product inventory, add new products, and update existing ones.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="customers-tab" class="tab-pane">
+          <div class="admin-container">
+            <div class="section-header">
+              <h2>Customer Management</h2>
+              <button class="btn btn-primary" disabled>
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+            <div class="placeholder-section">
+              <i class="fas fa-users" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+              <h3>Customer Management Coming Soon</h3>
+              <p>This section will display all customer information and purchase history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderModal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h2>Order Details</h2>
+        <div id="orderDetailsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+    
+    // Simple password protection
+    const ADMIN_PASSWORD = "110998";
+    const loginSection = document.getElementById('loginSection');
+    const adminContent = document.getElementById('adminContent');
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC2wo9KWsnsDmiLHWnBD_8d9vIZTBby82bdhVdWTJL3c3GNvdJZOqJwRiKo6-F9v6HtQ/exec';
+
+    // Track last known order count for detecting new orders
+    let lastOrderCount = 0;
+
+    // Show login by default
+    loginSection.style.display = 'block';
+    
+    function checkPassword() {
+      const password = document.getElementById('adminPassword').value;
+      if (password === ADMIN_PASSWORD) {
+        loginSection.style.display = 'none';
+        adminContent.style.display = 'block';
+        document.querySelector('[data-tab="orders"]').click();
+        
+        // Initialize order count and start checking for new orders
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        lastOrderCount = orders.filter(order => order.status !== 'archived').length;
+        setInterval(checkForNewOrders, 5000);
+      } else {
+        alert("Incorrect password");
+      }
+    }
+
+    function logout() {
+      adminContent.style.display = 'none';
+      loginSection.style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    function closeModal() {
+      document.getElementById('orderModal').style.display = 'none';
+    }
+
+    // Check for new orders periodically
+    function checkForNewOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const activeOrders = orders.filter(order => order.status !== 'archived');
+      
+      if (activeOrders.length > lastOrderCount) {
+        // New order detected!
+        const newOrders = activeOrders.slice(lastOrderCount);
+        lastOrderCount = activeOrders.length;
+        
+        // Update stats
+        updateOrderStats();
+        
+        // If we're on the orders tab, reload orders
+        if (document.querySelector('.tab-btn.active').getAttribute('data-tab') === 'orders') {
+          loadOrders();
+        }
+        
+        // Show notification for each new order
+        newOrders.forEach(order => {
+          showNewOrderNotification(order);
+        });
+      } else if (activeOrders.length < lastOrderCount) {
+        // Orders were deleted/archived
+        lastOrderCount = activeOrders.length;
+      }
+    }
+
+    // Show desktop notification for new orders
+    function showNewOrderNotification(order) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      
+      notification.innerHTML = `
+        <i class="fas fa-bell"></i>
+        <div class="notification-content">
+          <div class="notification-title">New Order Received!</div>
+          <div class="notification-message">
+            Order #${order.id} - ₦${order.amount.toLocaleString('en-NG')}
+          </div>
+        </div>
+        <i class="fas fa-times"></i>
+      `;
+      
+      // Close button
+      notification.querySelector('.fa-times').addEventListener('click', (e) => {
+        e.stopPropagation();
+        notification.remove();
+      });
+      
+      // Click to view order
+      notification.addEventListener('click', () => {
+        viewOrder(order.id);
+        notification.remove();
+      });
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 10 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 10000);
+    }
+
+    // Update recent activity section
+    function updateRecentActivity() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const recentOrders = orders
+        .filter(order => order.status !== 'archived')
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+      
+      const activityList = document.getElementById('activityList');
+      
+      if (recentOrders.length === 0) {
+        activityList.innerHTML = '<p>No recent activity</p>';
+        return;
+      }
+      
+      activityList.innerHTML = '';
+      
+      recentOrders.forEach(order => {
+        const activityItem = document.createElement('div');
+        activityItem.style.display = 'flex';
+        activityItem.style.justifyContent = 'space-between';
+        activityItem.style.padding = '0.5rem 0';
+        activityItem.style.borderBottom = '1px solid var(--border-color)';
+        activityItem.style.cursor = 'pointer';
+        
+        let statusClass = 'status-pending';
+        if (order.status === 'paid') statusClass = 'status-paid';
+        else if (order.status === 'shipped') statusClass = 'status-shipped';
+        else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+        
+        activityItem.innerHTML = `
+          <div>
+            <strong>Order #${order.id}</strong> - ${order.customer?.name || 'No Name'}
+          </div>
+          <div>
+            <span class="status-badge ${statusClass}">${order.status || 'pending'}</span>
+            <span style="margin-left: 10px; color: var(--text-muted); font-size: 0.9rem;">
+              ₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}
+            </span>
+          </div>
+        `;
+        
+        activityItem.addEventListener('click', () => viewOrder(order.id));
+        activityList.appendChild(activityItem);
+      });
+    }
+
+    // Tab Switching Functionality
+    document.querySelectorAll('.tab-btn, .sidebar nav a').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all buttons, links and panes
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.sidebar nav li').forEach(li => li.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        
+        // Get tab name
+        const tabName = btn.getAttribute('data-tab');
+        
+        // Add active class to clicked button and corresponding sidebar link
+        document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+        document.querySelector(`.sidebar a[data-tab="${tabName}"]`).parentElement.classList.add('active');
+        
+        // Show corresponding pane
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+        
+        // If switching to orders tab, reload orders
+        if (tabName === 'orders') {
+          loadOrders();
+        }
+      });
+    });
+
+    // Show Add Product Modal (placeholder)
+    function showAddProductModal() {
+      alert("Product management functionality coming soon!");
+    }
+
+    // Clear All Orders Functionality
+    function confirmClearOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      if (orders.length === 0) {
+        alert("There are no orders to clear!");
+        return;
+      }
+      
+      if (confirm("⚠️ WARNING: This will permanently delete ALL orders (including archived). Are you sure?")) {
+        clearAllOrders();
+      }
+    }
+
+    function clearAllOrders() {
+      localStorage.setItem('orders', JSON.stringify([]));
+      localStorage.removeItem('archivedOrders');
+      updateOrderStats();
+      loadOrders();
+      alert("All orders (including archived) have been permanently deleted.");
+    }
+
+    // Archive Orders Functionality
+    function confirmArchiveOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const activeOrders = orders.filter(order => order.status !== 'archived');
+      
+      if (activeOrders.length === 0) {
+        alert("There are no active orders to archive!");
+        return;
+      }
+      
+      if (confirm(`Archive all ${activeOrders.length} active orders? Archived orders will be preserved but hidden from normal views.`)) {
+        archiveAllOrders();
+      }
+    }
+
+    function archiveAllOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders')) || [];
+      
+      // Archive all non-archived orders
+      const updatedOrders = orders.map(order => {
+        if (order.status !== 'archived') {
+          archivedOrders.push({...order, status: 'archived'});
+          return {...order, status: 'archived'};
+        }
+        return order;
+      });
+      
+      localStorage.setItem('orders', JSON.stringify(updatedOrders));
+      localStorage.setItem('archivedOrders', JSON.stringify(archivedOrders));
+      loadOrders();
+      alert(`${orders.filter(o => o.status !== 'archived').length} orders have been archived.`);
+    }
+
+    function restoreArchivedOrders() {
+      const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders')) || [];
+      if (archivedOrders.length === 0) {
+        alert("There are no archived orders to restore!");
+        return;
+      }
+      
+      if (confirm(`Restore all ${archivedOrders.length} archived orders? This will bring them back to active status.`)) {
+        const currentOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        const updatedOrders = [...currentOrders];
+        
+        // Restore all archived orders
+        archivedOrders.forEach(order => {
+          if (!updatedOrders.some(o => o.id === order.id)) {
+            updatedOrders.push({...order, status: 'pending'});
+          }
+        });
+        
+        localStorage.setItem('orders', JSON.stringify(updatedOrders));
+        localStorage.removeItem('archivedOrders');
+        loadOrders();
+        alert(`${archivedOrders.length} archived orders have been restored.`);
+      }
+    }
+
+    function confirmDeleteArchived() {
+      const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders')) || [];
+      if (archivedOrders.length === 0) {
+        alert("There are no archived orders to delete!");
+        return;
+      }
+      
+      if (confirm(`⚠️ WARNING: This will permanently delete ${archivedOrders.length} archived orders. Are you sure?`)) {
+        localStorage.removeItem('archivedOrders');
+        loadOrders();
+        alert(`${archivedOrders.length} archived orders have been permanently deleted.`);
+      }
+    }
+
+    function updateOrderStats() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const activeOrders = orders.filter(order => order.status !== 'archived');
+  
+  // Calculate total revenue
+  const totalRevenue = activeOrders.reduce((sum, order) => {
+    // Ensure amount is treated as a number
+    const amount = typeof order.amount === 'string' 
+      ? parseInt(order.amount.replace(/[^\d]/g, '')) 
+      : order.amount;
+    return sum + (amount || 0);
+  }, 0);
+  
+  const pendingOrders = activeOrders.filter(order => order.status === 'pending').length;
+  const completedOrders = activeOrders.filter(order => order.status === 'paid' || order.status === 'shipped').length;
+  
+  document.getElementById('totalOrders').textContent = activeOrders.length;
+  document.getElementById('totalRevenue').textContent = `₦${totalRevenue.toLocaleString('en-NG')}`;
+  document.getElementById('pendingOrders').textContent = pendingOrders;
+  document.getElementById('completedOrders').textContent = completedOrders;
+  
+  updateRecentActivity();
+}
+
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const ordersTable = document.getElementById('ordersTable').getElementsByTagName('tbody')[0];
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+      
+      updateOrderStats();
+      
+      // Clear table
+      ordersTable.innerHTML = '';
+
+      // Filter orders
+      const filteredOrders = orders.filter(order => {
+        // Search filter
+        const matchesSearch = 
+          (order.id && order.id.toLowerCase().includes(searchInput)) ||
+          (order.customer?.name && order.customer.name.toLowerCase().includes(searchInput)) ||
+          (order.customer?.email && order.customer.email.toLowerCase().includes(searchInput)) ||
+          (order.customer?.phone && order.customer.phone.includes(searchInput));
+        
+        // Status filter
+        const matchesStatus = !statusFilter || order.status === statusFilter;
+        
+        // Date filter
+        let matchesDate = true;
+        if (dateFilter && order.date) {
+          const orderDate = new Date(order.date);
+          const today = new Date();
+          
+          switch(dateFilter) {
+            case 'today':
+              matchesDate = orderDate.toDateString() === today.toDateString();
+              break;
+            case 'week':
+              const startOfWeek = new Date(today);
+              startOfWeek.setDate(today.getDate() - today.getDay());
+              matchesDate = orderDate >= startOfWeek;
+              break;
+            case 'month':
+              matchesDate = orderDate.getMonth() === today.getMonth() && 
+                           orderDate.getFullYear() === today.getFullYear();
+              break;
+          }
+        }
+        
+        return matchesSearch && matchesStatus && matchesDate;
+      });
+
+      // Display filtered orders
+      filteredOrders.forEach(order => {
+        const row = ordersTable.insertRow();
+        
+        // Format items list with color information
+        const itemsList = (order.items || []).map(item => {
+          let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
+          if (item.color) {
+            itemText += ` - Color: ${item.colorName || item.color}`;
+          }
+          if (item.size) {
+            itemText += ` - Size: ${item.size}`;
+          }
+          return itemText;
+        }).join(', ');
+        
+        // Format date properly with fallback
+        let formattedDate = 'No Date';
+        try {
+          if (order.date) {
+            const orderDate = new Date(order.date);
+            if (!isNaN(orderDate.getTime())) {
+              formattedDate = orderDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              });
+            }
+          }
+        } catch (e) {
+          console.error('Date formatting error:', e);
+        }
+        
+        // Get status badge class
+        let statusClass = 'status-pending';
+        if (order.status === 'paid') statusClass = 'status-paid';
+        else if (order.status === 'shipped') statusClass = 'status-shipped';
+        else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+        else if (order.status === 'archived') statusClass = 'status-archived';
+        
+        // Create table row
+        row.innerHTML = `
+          <td>${order.id || 'N/A'}</td>
+          <td>
+            <strong>${order.customer?.name || 'No Name'}</strong><br>
+            <small>${order.customer?.email || 'No Email'}</small><br>
+            <small>${order.customer?.phone || 'No Phone'}</small>
+          </td>
+          <td>${formattedDate}</td>
+          <td class="order-items" title="${itemsList}">
+            ${itemsList.substring(0, 30)}${itemsList.length > 30 ? '...' : ''}
+          </td>
+          <td>₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}</td>
+          <td><span class="status-badge ${statusClass}">${order.status || 'pending'}</span></td>
+          <td>
+            <button class="btn btn-primary" onclick="viewOrder('${order.id || ''}')">
+              <i class="fas fa-eye"></i> View
+            </button>
+          </td>
+        `;
+      });
+    }
+
+    function viewOrder(orderId) {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const order = orders.find(o => o.id === orderId);
+      
+      if (order) {
+        const modal = document.getElementById('orderModal');
+        const modalContent = document.getElementById('orderDetailsContent');
+        
+        // Format items list
+        const itemsList = (order.items || []).map(item => `
+          <div class="item-details" style="margin-bottom: 0.5rem;">
+            <strong>${item.name || 'Unknown Item'}</strong> (x${item.quantity || 1})<br>
+            ${item.color ? `Color: <span class="color-swatch" style="background-color: ${item.color};"></span> ${item.colorName || item.color}<br>` : ''}
+            ${item.size ? `Size: ${item.size}<br>` : ''}
+            Price: ₦${item.price ? item.price.toLocaleString('en-NG') : '0'}
+          </div>
+        `).join('');
+        
+        // Format date
+        let formattedDate = 'No Date';
+        try {
+          if (order.date) {
+            const orderDate = new Date(order.date);
+            if (!isNaN(orderDate.getTime())) {
+              formattedDate = orderDate.toLocaleString();
+            }
+          }
+        } catch (e) {
+          console.error('Date formatting error:', e);
+        }
+        
+        // Get status badge
+        let statusClass = 'status-pending';
+        if (order.status === 'paid') statusClass = 'status-paid';
+        else if (order.status === 'shipped') statusClass = 'status-shipped';
+        else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+        else if (order.status === 'archived') statusClass = 'status-archived';
+        
+        // Create modal content
+        modalContent.innerHTML = `
+          <div style="margin-bottom: 1.5rem;">
+            <h3>Order #${order.id || 'N/A'}</h3>
+            <p>Date: ${formattedDate}</p>
+            <p>Status: <span class="status-badge ${statusClass}">${order.status || 'pending'}</span></p>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+            <div>
+              <h4>Customer Information</h4>
+              <p><strong>Name:</strong> ${order.customer?.name || 'Not provided'}</p>
+              <p><strong>Email:</strong> ${order.customer?.email || 'Not provided'}</p>
+              <p><strong>Phone:</strong> ${order.customer?.phone || 'Not provided'}</p>
+              <p><strong>Address:</strong> ${order.customer?.address || 'Not provided'}</p>
+            </div>
+            
+            <div>
+              <h4>Order Summary</h4>
+              <p><strong>Items:</strong> ${order.items?.length || 0}</p>
+              <p><strong>Subtotal:</strong> ₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}</p>
+              <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Not specified'}</p>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <h4>Order Items</h4>
+            ${itemsList}
+          </div>
+          
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'paid')">
+              <i class="fas fa-check"></i> Mark as Paid
+            </button>
+            <button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'shipped')">
+              <i class="fas fa-truck"></i> Mark as Shipped
+            </button>
+            <button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')">
+              <i class="fas fa-times"></i> Cancel Order
+            </button>
+            ${order.status !== 'archived' ? 
+              `<button class="btn btn-warning" onclick="updateOrderStatus('${order.id}', 'archived')">
+                <i class="fas fa-archive"></i> Archive
+              </button>` : 
+              `<button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'pending')">
+                <i class="fas fa-undo"></i> Restore
+              </button>`}
+          </div>
+        `;
+        
+        modal.style.display = 'flex';
+      } else {
+        alert("Order not found");
+      }
+    }
+
+    function updateOrderStats() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const activeOrders = orders.filter(order => order.status !== 'archived');
+  
+  // Fix: Properly calculate total revenue by converting amounts to numbers
+  const totalRevenue = activeOrders.reduce((sum, order) => {
+    // Handle cases where amount might be a string like "₦46,500"
+    let amount = order.amount;
+    if (typeof amount === 'string') {
+      // Remove currency symbol and commas
+      amount = amount.replace(/[^\d.-]/g, '');
+    }
+    // Convert to number and add to sum
+    return sum + (Number(amount) || 0);
+  }, 0);
+  
+  const pendingOrders = activeOrders.filter(order => order.status === 'pending').length;
+  const completedOrders = activeOrders.filter(order => order.status === 'paid' || order.status === 'shipped').length;
+  
+  document.getElementById('totalOrders').textContent = activeOrders.length;
+  document.getElementById('totalRevenue').textContent = `₦${totalRevenue.toLocaleString('en-NG')}`;
+  document.getElementById('pendingOrders').textContent = pendingOrders;
+  document.getElementById('completedOrders').textContent = completedOrders;
+  
+  // Update recent activity whenever stats are updated
+  updateRecentActivity();
+}
+
+    function syncWithGoogleSheets() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const activeOrders = orders.filter(order => order.status !== 'archived');
+      
+      if (activeOrders.length === 0) {
+        alert("No active orders to sync");
+        return;
+      }
+
+      // Prepare data with all fallbacks
+      const sheetData = activeOrders.map(order => {
+        const itemsList = (order.items || []).map(item => {
+          let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
+          if (item.color) {
+            itemText += ` - Color: ${item.colorName || item.color}`;
+          }
+          if (item.size) {
+            itemText += ` - Size: ${item.size}`;
+          }
+          return itemText;
+        }).join(', ');
+        
+        let formattedDate = 'No Date';
+        try {
+          if (order.date) {
+            const orderDate = new Date(order.date);
+            if (!isNaN(orderDate.getTime())) {
+              formattedDate = orderDate.toISOString();
+            }
+          }
+        } catch (e) {
+          console.error('Date formatting error:', e);
+        }
+        
+        return {
+          id: order.id || 'N/A',
+          name: order.customer?.name || 'No Name',
+          email: order.customer?.email || 'No Email',
+          phone: order.customer?.phone || 'No Phone',
+          address: order.customer?.address || 'Not provided',
+          items: itemsList,
+          amount: order.amount ? `₦${order.amount.toLocaleString('en-NG')}` : '₦0',
+          status: order.status || 'pending',
+          date: formattedDate,
+          payment_method: order.paymentMethod || 'Not specified'
+        };
+      });
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          action: 'addOrders',
+          orders: sheetData 
+        }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        alert(`Synced ${activeOrders.length} active orders with Google Sheets`);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to sync with Google Sheets. Check console for details.');
+      });
+    }
+
+    function downloadCSV() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const activeOrders = orders.filter(order => order.status !== 'archived');
+      
+      if (activeOrders.length === 0) {
+        alert("No active orders to download");
+        return;
+      }
+
+      let csv = 'Order ID,Customer Name,Email,Phone,Address,Items,Amount (₦),Status,Date,Payment Method\n';
+      
+      activeOrders.forEach(order => {
+        const itemsList = (order.items || []).map(item => {
+          let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
+          if (item.color) {
+            itemText += ` - Color: ${item.colorName || item.color}`;
+          }
+          if (item.size) {
+            itemText += ` - Size: ${item.size}`;
+          }
+          return itemText;
+        }).join('; ');
+        
+        let formattedDate = 'No Date';
+        try {
+          if (order.date) {
+            const orderDate = new Date(order.date);
+            if (!isNaN(orderDate.getTime())) {
+              formattedDate = orderDate.toLocaleString();
+            }
+          }
+        } catch (e) {
+          console.error('Date formatting error:', e);
+        }
+        
+        csv += `"${order.id || 'N/A'}",` +
+               `"${order.customer?.name || 'No Name'}",` +
+               `"${order.customer?.email || 'No Email'}",` +
+               `"${order.customer?.phone || 'No Phone'}",` +
+               `"${order.customer?.address || 'Not provided'}",` +
+               `"${itemsList}",` +
+               `"₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}",` +
+               `"${order.status || 'pending'}",` +
+               `"${formattedDate}",` +
+               `"${order.paymentMethod || 'Not specified'}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `lawal_merch_orders_${new Date().toISOString().slice(0,10)}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function downloadPDF() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const activeOrders = orders.filter(order => order.status !== 'archived');
+      
+      if (activeOrders.length === 0) {
+        alert("No active orders to download");
+        return;
+      }
+
+      const doc = new jsPDF();
+      const date = new Date().toISOString().slice(0,10);
+      
+      // Add title
+      doc.setFontSize(18);
+      doc.text(`Lawal Merch Orders - ${date}`, 14, 15);
+      doc.setFontSize(12);
+      doc.setTextColor(100);
+      doc.text(`Total Active Orders: ${activeOrders.length}`, 14, 22);
+      
+      // Prepare data for table
+      const tableData = activeOrders.map(order => {
+        const itemsList = (order.items || []).map(item => {
+          let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
+          if (item.color) {
+            itemText += ` - Color: ${item.colorName || item.color}`;
+          }
+          if (item.size) {
+            itemText += ` - Size: ${item.size}`;
+          }
+          return itemText;
+        }).join(', ');
+        
+        let formattedDate = 'No Date';
+        try {
+          if (order.date) {
+            const orderDate = new Date(order.date);
+            if (!isNaN(orderDate.getTime())) {
+              formattedDate = orderDate.toLocaleString();
+            }
+          }
+        } catch (e) {
+          console.error('Date formatting error:', e);
+        }
+        
+        return [
+          order.id || 'N/A',
+          order.customer?.name || 'No Name',
+          order.customer?.email || 'No Email',
+          order.customer?.phone || 'No Phone',
+          order.customer?.address || 'Not provided',
+          itemsList,
+          `₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}`,
+          order.status || 'pending',
+          formattedDate,
+          order.paymentMethod || 'Not specified'
+        ];
+      });
+
+      // Add table
+      doc.autoTable({
+        head: [['Order ID', 'Name', 'Email', 'Phone', 'Address', 'Items', 'Amount', 'Status', 'Date', 'Payment']],
+        body: tableData,
+        startY: 30,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+          overflow: 'linebreak'
+        },
+        columnStyles: {
+          0: {cellWidth: 15},
+          1: {cellWidth: 15},
+          2: {cellWidth: 20},
+          3: {cellWidth: 15},
+          4: {cellWidth: 20},
+          5: {cellWidth: 25},
+          6: {cellWidth: 15},
+          7: {cellWidth: 15},
+          8: {cellWidth: 20},
+          9: {cellWidth: 15}
+        }
+      });
+
+      // Save PDF
+      doc.save(`lawal_merch_orders_${date}.pdf`);
+    }
+
+    // Event listeners for filters
+    document.getElementById('searchInput').addEventListener('input', loadOrders);
+    document.getElementById('statusFilter').addEventListener('change', loadOrders);
+    document.getElementById('dateFilter').addEventListener('change', loadOrders);
+
+    // // Uncomment this line to bypass login during development
+    // window.onload = function() { 
+    //   loginSection.style.display = 'none'; 
+    //   adminContent.style.display = 'block'; 
+    //   document.querySelector('[data-tab="orders"]').click(); 
+      
+    // // Initialize order count and start checking for new orders
+    //   const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    //   lastOrderCount = orders.filter(order => order.status !== 'archived').length;
+    //   setInterval(checkForNewOrders, 5000);
+    // };
+  </script>
+</body>
+</html>
