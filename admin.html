@@ -836,7 +836,7 @@
     const ADMIN_PASSWORD = "110998";
     const loginSection = document.getElementById('loginSection');
     const adminContent = document.getElementById('adminContent');
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC2wo9KWsnsDmiLHWnBD_8d9vIZTBby82bdhVdWTJL3c3GNvdJZOqJwRiKo6-F9v6HtQ/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynjIW52Z2GmieZ4Vl9IqBbWXDxExWgSC8jZ7Op5lRzMq5k_wYrMbpYnK9YqiBETGttWg/exec';
 
     // Track last known order count for detecting new orders
     let lastOrderCount = 0;
@@ -1373,81 +1373,128 @@
   updateRecentActivity();
 }
 
-    function syncWithGoogleSheets() {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      const activeOrders = orders.filter(order => order.status !== 'archived');
-      
-      if (activeOrders.length === 0) {
-        alert("No active orders to sync");
-        return;
+    // Google Sheets Integration Functions
+function syncWithGoogleSheets() {
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  const activeOrders = orders.filter(order => order.status !== 'archived');
+  
+  if (activeOrders.length === 0) {
+    alert("No active orders to sync");
+    return;
+  }
+
+  // Show loading state
+  const syncBtn = document.querySelector('.btn-info i.fa-sync-alt');
+  if (syncBtn) {
+    syncBtn.classList.add('fa-spin');
+  }
+
+  // Prepare data with all fallbacks
+  const sheetData = activeOrders.map(order => {
+    const itemsList = (order.items || []).map(item => {
+      let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
+      if (item.color) {
+        itemText += ` - Color: ${item.colorName || item.color}`;
       }
-
-      // Prepare data with all fallbacks
-      const sheetData = activeOrders.map(order => {
-        const itemsList = (order.items || []).map(item => {
-          let itemText = `${item.name || 'Unknown Item'} (x${item.quantity || 1})`;
-          if (item.color) {
-            itemText += ` - Color: ${item.colorName || item.color}`;
-          }
-          if (item.size) {
-            itemText += ` - Size: ${item.size}`;
-          }
-          return itemText;
-        }).join(', ');
-        
-        let formattedDate = 'No Date';
-        try {
-          if (order.date) {
-            const orderDate = new Date(order.date);
-            if (!isNaN(orderDate.getTime())) {
-              formattedDate = orderDate.toISOString();
-            }
-          }
-        } catch (e) {
-          console.error('Date formatting error:', e);
+      if (item.size) {
+        itemText += ` - Size: ${item.size}`;
+      }
+      return itemText;
+    }).join(', ');
+    
+    let formattedDate = 'No Date';
+    try {
+      if (order.date) {
+        const orderDate = new Date(order.date);
+        if (!isNaN(orderDate.getTime())) {
+          formattedDate = orderDate.toISOString();
         }
-        
-        return {
-          id: order.id || 'N/A',
-          name: order.customer?.name || 'No Name',
-          email: order.customer?.email || 'No Email',
-          phone: order.customer?.phone || 'No Phone',
-          address: order.customer?.address || 'Not provided',
-          items: itemsList,
-          amount: order.amount ? `₦${order.amount.toLocaleString('en-NG')}` : '₦0',
-          status: order.status || 'pending',
-          date: formattedDate,
-          payment_method: order.paymentMethod || 'Not specified'
-        };
-      });
+      }
+    } catch (e) {
+      console.error('Date formatting error:', e);
+    }
+    
+    return {
+      id: order.id || 'N/A',
+      name: order.customer?.name || 'No Name',
+      email: order.customer?.email || 'No Email',
+      phone: order.customer?.phone || 'No Phone',
+      address: order.customer?.address || 'Not provided',
+      items: itemsList,
+      amount: order.amount ? `₦${order.amount.toLocaleString('en-NG')}` : '₦0',
+      status: order.status || 'pending',
+      date: formattedDate,
+      payment_method: order.paymentMethod || 'Not specified'
+    };
+  });
 
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          action: 'addOrders',
-          orders: sheetData 
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => {
-            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Success:', data);
-        alert(`Synced ${activeOrders.length} active orders with Google Sheets`);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Failed to sync with Google Sheets. Check console for details.');
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ 
+      action: 'addOrders',
+      orders: sheetData 
+    }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.text().then(text => {
+        throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
       });
     }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    showNotification('Success', `Synced ${activeOrders.length} active orders with Google Sheets`, 'success');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    showNotification('Error', 'Failed to sync with Google Sheets. Check console for details.', 'error');
+  })
+  .finally(() => {
+    // Remove loading state
+    if (syncBtn) {
+      syncBtn.classList.remove('fa-spin');
+    }
+  });
+}
+
+// Notification function
+function showNotification(title, message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  
+  let icon = 'fa-info-circle';
+  if (type === 'success') icon = 'fa-check-circle';
+  if (type === 'error') icon = 'fa-exclamation-circle';
+  
+  notification.innerHTML = `
+    <i class="fas ${icon}"></i>
+    <div class="notification-content">
+      <div class="notification-title">${title}</div>
+      <div class="notification-message">${message}</div>
+    </div>
+    <i class="fas fa-times"></i>
+  `;
+  
+  // Close button
+  notification.querySelector('.fa-times').addEventListener('click', (e) => {
+    e.stopPropagation();
+    notification.remove();
+  });
+  
+  document.body.appendChild(notification);
+  
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.remove();
+    }
+  }, 5000);
+}
 
     function downloadCSV() {
       const orders = JSON.parse(localStorage.getItem('orders')) || [];
