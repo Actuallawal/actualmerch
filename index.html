@@ -93,7 +93,7 @@
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/hero-bg.jpg');
+      background: var(--bg-darker) linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/hero-bg.jpg');
       background-size: cover;
       background-position: center;
       height: 60vh;
@@ -948,6 +948,16 @@
       const modal = document.getElementById('quickViewModal');
       if (modal) modal.remove();
     }
+
+    function closeModal() {
+  const modal = document.getElementById('quickViewModal');
+  if (modal) modal.remove();
+  document.removeEventListener('keydown', handleKeyDown);
+}
+
+function handleKeyDown(e) {
+  if (e.key === 'Escape') closeModal();
+}
 
     function updateModalColor(productId, color) {
       selectColor(productId, color);
