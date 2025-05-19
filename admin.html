@@ -634,10 +634,10 @@
 <body>
   <!-- Simple Password Protection -->
   <div id="loginSection" class="login-form" style="display: none;">
-    <h2>Admin Login</h2>
-    <input type="password" id="adminPassword" placeholder="Enter admin password">
-    <button class="btn btn-primary" onclick="checkPassword()">Login</button>
-  </div>
+  <h2>Admin Login</h2>
+  <input type="password" id="adminPassword" placeholder="Enter admin password" onkeypress="handleKeyPress(event)">
+  <button class="btn btn-primary" onclick="checkPassword()">Login</button>
+</div>
 
   <!-- Main Admin Content (hidden by default) -->
   <div id="adminContent" style="display: none;">
@@ -843,7 +843,14 @@
 
     // Show login by default
     loginSection.style.display = 'block';
-    
+
+    function handleKeyPress(event) {
+  // Check if the pressed key is Enter (key code 13)
+  if (event.keyCode === 13) {
+    checkPassword();
+  }
+}
+   
     function checkPassword() {
       const password = document.getElementById('adminPassword').value;
       if (password === ADMIN_PASSWORD) {
@@ -1113,28 +1120,36 @@
       }
     }
 
-    function updateOrderStats() {
+    function updateOrderStatus(orderId, newStatus) {
   const orders = JSON.parse(localStorage.getItem('orders')) || [];
-  const activeOrders = orders.filter(order => order.status !== 'archived');
+  const orderIndex = orders.findIndex(o => o.id === orderId);
   
-  // Calculate total revenue
-  const totalRevenue = activeOrders.reduce((sum, order) => {
-    // Ensure amount is treated as a number
-    const amount = typeof order.amount === 'string' 
-      ? parseInt(order.amount.replace(/[^\d]/g, '')) 
-      : order.amount;
-    return sum + (amount || 0);
-  }, 0);
-  
-  const pendingOrders = activeOrders.filter(order => order.status === 'pending').length;
-  const completedOrders = activeOrders.filter(order => order.status === 'paid' || order.status === 'shipped').length;
-  
-  document.getElementById('totalOrders').textContent = activeOrders.length;
-  document.getElementById('totalRevenue').textContent = `₦${totalRevenue.toLocaleString('en-NG')}`;
-  document.getElementById('pendingOrders').textContent = pendingOrders;
-  document.getElementById('completedOrders').textContent = completedOrders;
-  
-  updateRecentActivity();
+  if (orderIndex !== -1) {
+    // Update the order status
+    orders[orderIndex].status = newStatus;
+    
+    // If archiving, also add to archived orders
+    if (newStatus === 'archived') {
+      const archivedOrders = JSON.parse(localStorage.getItem('archivedOrders')) || [];
+      archivedOrders.push(orders[orderIndex]);
+      localStorage.setItem('archivedOrders', JSON.stringify(archivedOrders));
+    }
+    
+    // Save updated orders
+    localStorage.setItem('orders', JSON.stringify(orders));
+    
+    // Update UI
+    loadOrders();
+    updateOrderStats();
+    
+    // Close the modal
+    closeModal();
+    
+    // Show notification
+    showNotification('Success', `Order #${orderId} status updated to ${newStatus}`, 'success');
+  } else {
+    alert("Order not found");
+  }
 }
 
     function loadOrders() {
@@ -1290,56 +1305,29 @@
         else if (order.status === 'archived') statusClass = 'status-archived';
         
         // Create modal content
-        modalContent.innerHTML = `
-          <div style="margin-bottom: 1.5rem;">
-            <h3>Order #${order.id || 'N/A'}</h3>
-            <p>Date: ${formattedDate}</p>
-            <p>Status: <span class="status-badge ${statusClass}">${order.status || 'pending'}</span></p>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
-            <div>
-              <h4>Customer Information</h4>
-              <p><strong>Name:</strong> ${order.customer?.name || 'Not provided'}</p>
-              <p><strong>Email:</strong> ${order.customer?.email || 'Not provided'}</p>
-              <p><strong>Phone:</strong> ${order.customer?.phone || 'Not provided'}</p>
-              <p><strong>Address:</strong> ${order.customer?.address || 'Not provided'}</p>
-            </div>
-            
-            <div>
-              <h4>Order Summary</h4>
-              <p><strong>Items:</strong> ${order.items?.length || 0}</p>
-              <p><strong>Subtotal:</strong> ₦${order.amount ? order.amount.toLocaleString('en-NG') : '0'}</p>
-              <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Not specified'}</p>
-            </div>
-          </div>
-          
-          <div style="margin-bottom: 1.5rem;">
-            <h4>Order Items</h4>
-            ${itemsList}
-          </div>
-          
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'paid')">
-              <i class="fas fa-check"></i> Mark as Paid
-            </button>
-            <button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'shipped')">
-              <i class="fas fa-truck"></i> Mark as Shipped
-            </button>
-            <button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')">
-              <i class="fas fa-times"></i> Cancel Order
-            </button>
-            ${order.status !== 'archived' ? 
-              `<button class="btn btn-warning" onclick="updateOrderStatus('${order.id}', 'archived')">
-                <i class="fas fa-archive"></i> Archive
-              </button>` : 
-              `<button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'pending')">
-                <i class="fas fa-undo"></i> Restore
-              </button>`}
-          </div>
-        `;
-        
-        modal.style.display = 'flex';
+modalContent.innerHTML = `
+  <!-- ... other content ... -->
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'paid')">
+      <i class="fas fa-check"></i> Mark as Paid
+    </button>
+    <button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'shipped')">
+      <i class="fas fa-truck"></i> Mark as Shipped
+    </button>
+    <button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'cancelled')">
+      <i class="fas fa-times"></i> Cancel Order
+    </button>
+    ${order.status !== 'archived' ? 
+      `<button class="btn btn-warning" onclick="updateOrderStatus('${order.id}', 'archived')">
+        <i class="fas fa-archive"></i> Archive
+      </button>` : 
+      `<button class="btn btn-info" onclick="updateOrderStatus('${order.id}', 'pending')">
+        <i class="fas fa-undo"></i> Restore
+      </button>`}
+  </div>
+`;
+
+      modal.style.display = 'flex';
       } else {
         alert("Order not found");
       }
