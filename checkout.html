@@ -96,6 +96,36 @@
       margin-top: 0;
     }
 
+    .quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.quantity-btn {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.quantity-btn:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.quantity {
+  min-width: 20px;
+  text-align: center;
+}
+
     .cart-items {
       margin: 1.5rem 0;
       max-height: 400px;
@@ -388,9 +418,9 @@
           <span id="subtotal">₦0</span>
         </div>
         <div class="cart-total-row">
-          <span>Delivery:</span>
-          <span id="shipping">₦5,822</span>
-        </div>
+  <span>Delivery:</span>
+  <span id="shipping">₦0</span>
+</div>
         <div class="cart-total-row">
           <span>Total:</span>
           <span id="total">₦5,822</span>
@@ -566,23 +596,32 @@
         const itemElement = document.createElement('div');
         itemElement.className = 'cart-item';
         itemElement.innerHTML = `
-          <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='assets/placeholder.jpg'">
-          <div class="cart-item-details">
-            <div class="cart-item-title">${item.name}</div>
-            <div class="cart-item-meta">
-              ${item.colorName} ${item.size ? '| Size: ' + item.size : ''} | Qty: ${item.quantity}
-            </div>
-            <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
-            <button class="cart-item-remove" onclick="removeItem(${item.id}, '${item.color}', '${item.size}')">
-              <i class="fas fa-trash"></i> Remove
-            </button>
-          </div>
-        `;
+  <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='assets/placeholder.jpg'">
+  <div class="cart-item-details">
+    <div class="cart-item-title">${item.name}</div>
+    <div class="cart-item-meta">
+      ${item.colorName} ${item.size ? '| Size: ' + item.size : ''}
+    </div>
+    <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+    <div class="quantity-controls">
+      <button class="quantity-btn" onclick="updateQuantity(${item.id}, '${item.color}', '${item.size}', -1)">
+        <i class="fas fa-minus"></i>
+      </button>
+      <span class="quantity">${item.quantity}</span>
+      <button class="quantity-btn" onclick="updateQuantity(${item.id}, '${item.color}', '${item.size}', 1)">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+    <button class="cart-item-remove" onclick="removeItem(${item.id}, '${item.color}', '${item.size}')">
+      <i class="fas fa-trash"></i> Remove
+    </button>
+  </div>
+`;
         
         cartItemsContainer.appendChild(itemElement);
       });
       
-      const shipping = 5822; // New flat rate shipping cost
+      const shipping = 0; // New flat rate shipping cost
       const total = subtotal + shipping;
       
       subtotalElement.textContent = `₦${subtotal.toLocaleString()}`;
@@ -595,13 +634,11 @@
     
     // Remove item from cart
     function removeItem(id, color, size) {
-      let cart = JSON.parse(localStorage.getItem('cart')) || [];
-      cart = cart.filter(item => !(item.id === id && item.color === color && item.size === size));
-      localStorage.setItem('cart', JSON.stringify(cart));
-      
-      // Reload the page to update the display
-      location.reload();
-    }
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart = cart.filter(item => !(item.id === id && item.color === color && item.size === size));
+  localStorage.setItem('cart', JSON.stringify(cart));
+  location.reload();
+}
     
     // Form validation
     const form = document.getElementById('checkoutForm');
@@ -727,6 +764,24 @@
       handler.openIframe();
     }
     
+    function updateQuantity(id, color, size, change) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const itemIndex = cart.findIndex(item => 
+    item.id === id && item.color === color && item.size === size
+  );
+
+  if (itemIndex !== -1) {
+    cart[itemIndex].quantity += change;
+    
+    // Remove item if quantity reaches 0
+    if (cart[itemIndex].quantity <= 0) {
+      cart.splice(itemIndex, 1);
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    location.reload(); // Refresh to update totals
+  }
+}
     // Show order success with details
     function showOrderSuccess(cart, orderRef, totalAmount) {
       // Hide the form
@@ -756,7 +811,7 @@
         </div>
         <div class="order-item">
           <span>Delivery:</span>
-          <span>₦5,822</span>
+          <span>₦0</span>
         </div>
       `;
       
@@ -782,7 +837,7 @@
           image: item.image
         })),
         amount: parseInt(totalAmount.replace(/[^\d]/g, '')),
-        shipping: 5822,
+        shipping: 0,
         status: 'pending',
         paymentMethod: 'Paystack'
       };
