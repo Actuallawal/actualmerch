@@ -531,8 +531,72 @@
       }
       
       .product {
-        padding: 1rem;
+        padding: 0.8rem;
+    min-height: auto;
       }
+
+      .product {
+    padding: 0.8rem;
+    min-height: auto; /* Remove any fixed height */
+  }
+  
+  .product-image-container {
+    height: 120px; /* Smaller image container */
+  }
+  
+  .product h3 {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
+  
+  .product p {
+    font-size: 0.8rem;
+    margin: 0.3rem 0;
+  }
+  
+  .color-options {
+    margin: 0.5rem 0;
+  }
+  
+  .color-option {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .size-option {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+  }
+  
+  .product-details {
+    font-size: 0.7rem;
+    min-height: 15px;
+    margin: 0.3rem 0;
+  }
+  
+  .product .btn {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  .stock-badge,
+  .featured-badge,
+  .bestseller-badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.3rem;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .featured-badge {
+    left: 5px;
+  }
+  
+  .bestseller-badge {
+    top: 30px;
+    left: 5px;
+  }
       
       .logo {
         height: 80px;
@@ -655,7 +719,7 @@
       {
         id: 1,
         name: "Premium 6Faces Top",
-        price: 30999,
+        price: 29992,
         image: "https://i.ibb.co/5hKZMgZ4/TopBH.jpg",
         description: "High-quality streetwear top with unique 6Faces design. Made from premium cotton blend for comfort and durability.",
         stock: 5,
@@ -669,7 +733,7 @@
       {
         id: 2,
         name: "Premium Cash Top",
-        price: 30999,
+        price: 29984,
         image: "https://i.ibb.co/LD1X6d0B/TopBC.jpg",
         description: "Exclusive cash-themed design with premium stitching. Perfect for making a bold fashion statement.",
         stock: 8,
@@ -684,7 +748,7 @@
       {
         id: 3,
         name: "Premium Tank 6Faces",
-        price: 29989,
+        price: 26994,
         image: "https://i.ibb.co/nsJd2V7m/TankBH.jpg",
         description: "Lightweight and breathable tank top featuring the iconic 6Faces design. Ideal for hot weather.",
         stock: 3,
@@ -698,7 +762,7 @@
       {
         id: 4,
         name: "Premium Tank Cash",
-        price: 29989,
+        price: 26989,
         image: "https://i.ibb.co/1GrSJrKt/TankBC.jpg",
         description: "Sleek cash-themed tank top with premium fabric that keeps you cool and comfortable all day.",
         stock: 3,
@@ -713,7 +777,7 @@
       {
         id: 5,
         name: "Premium Hoodie Cash",
-        price: 31989,
+        price: 29989,
         bestSeller: true,
         image: "https://i.ibb.co/Gf0wdnDm/HoodieBC.jpg",
         description: "Lightweight and breathable Hoodie featuring the iconic 6Faces design. Ideal for hot weather.",
@@ -728,7 +792,7 @@
       {
         id: 6,
         name: "Premium Hoodie 6Faces",
-        price: 31989,
+        price: 29985,
         image: "https://i.ibb.co/dyGwpwF/HoodieBH.jpg",
         description: "Sleek cash-themed Hoodie with premium fabric that keeps you cool and comfortable all day.",
         stock: 6,
