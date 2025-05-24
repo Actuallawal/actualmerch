@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Checkout - Lawal Merch</title>
   <link rel="icon" href="https://i.ibb.co/PvnNSJTL/Kidnapped-Merch-head.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -213,10 +213,19 @@
       font-weight: bold;
       margin-top: 1rem;
       display: inline-block;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       width: 100%;
       text-align: center;
+      -webkit-tap-highlight-color: transparent;
     }
+
+    .btn:active {
+  transform: scale(0.98);
+}
+
+.quantity-btn {
+  -webkit-tap-highlight-color: transparent;
+}
 
     .btn:hover {
       background: var(--primary-dark);
@@ -251,6 +260,8 @@
     }
 
     input, select, textarea {
+      font-size: 16px; /* Prevent iOS zooming */
+      -webkit-appearance: none;
       width: 100%;
       padding: 0.75rem;
       border-radius: 5px;
@@ -259,6 +270,14 @@
       color: var(--text-light);
       font-family: inherit;
     }
+
+    select {
+  padding: 0.75rem 1.5rem 0.75rem 0.75rem;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23bbb'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
 
     input:focus, select:focus, textarea:focus {
       outline: none;
@@ -375,6 +394,70 @@
       color: var(--primary);
     }
 
+    /* Mobile-specific styles */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+  }
+
+  .cart-summary, .checkout-form {
+    padding: 1rem;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cart-item-image {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+
+  .delivery-instructions {
+    padding: 0.75rem;
+  }
+
+  .delivery-instructions ul {
+    padding-left: 1rem;
+  }
+
+  textarea#address {
+    min-height: 100px;
+  }
+
+  .order-actions .btn {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.5rem;
+  }
+
+  .logo {
+    height: 60px;
+  }
+
+  .back-to-shop {
+    font-size: 0.8rem;
+    left: 0.5rem;
+  }
+
+  .form-group small {
+    font-size: 0.8rem;
+  }
+
+  .payment-success i {
+    font-size: 3rem;
+  }
+}
+
     @media (max-width: 600px) {
       .form-row {
         grid-template-columns: 1fr;
@@ -432,62 +515,71 @@
       <h2>Checkout Information</h2>
       <form id="checkoutForm">
         <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" required>
-          <div class="error-message" id="emailError">Please enter a valid email address</div>
-        </div>
 
-        <div style="background: var(--bg-darker); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
-  <h3 style="margin-top: 0; color: var(--primary);">Delivery Instructions</h3>
-  <p style="margin-bottom: 0;">Please provide your complete delivery address to ensure smooth delivery. Include:</p>
-  <ul style="margin-top: 0.5rem;">
-    <li>House number and street name</li>
-    <li>Apartment/floor number (if applicable)</li>
-    <li>Landmark or area name</li>
-    <li>City and State</li>
+          <div class="delivery-instructions" style="background: var(--bg-darker); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem; font-size: 0.95rem;">
+  <h3 style="margin-top: 0; color: var(--primary); font-size: 1.1rem;">📦 Delivery Instructions</h3>
+  <p style="margin-bottom: 0.5rem;">For fast delivery, please provide complete address details:</p>
+  <ul style="margin-top: 0.5rem; margin-bottom: 0; padding-left: 1.2rem;">
+    <li style="margin-bottom: 0.3rem;">🏠 House number and street name</li>
+    <li style="margin-bottom: 0.3rem;">🏢 Apartment/floor (if applicable)</li>
+    <li style="margin-bottom: 0.3rem;">📍 Nearby landmark</li>
+    <li style="margin-bottom: 0.3rem;">🏙️ City and State</li>
   </ul>
 </div>
+          <!-- Email -->
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" id="email" required>
+    <div class="error-message" id="emailError">Please enter a valid email address</div>
+  </div>
+  
+  <!-- First Name -->
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" required>
+    <div class="error-message" id="firstNameError">Please enter your first name</div>
+  </div>
+  
+  <!-- Last Name -->
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" required>
+    <div class="error-message" id="lastNameError">Please enter your last name</div>
+  </div>
         
-        <div class="form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" required>
-          <div class="error-message" id="firstNameError">Please enter your first name</div>
-        </div>
+         <!-- Phone -->
+  <div class="form-group">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" required>
+    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+  </div>
+  
+  <!-- Address -->
+  <div class="form-group">
+    <label for="address">Full Delivery Address</label>
+    <textarea id="address" rows="4" required 
+      placeholder="Example: 25 Take am play street, Opp. Lawal's Mansion, Edo"
+      style="font-size: 0.95rem;"></textarea>
+    <small style="color: var(--text-muted); display: block; margin-top: 0.3rem; font-size: 0.85rem;">
+      Tip: Be as detailed as possible to help our delivery team
+    </small>
+    <div class="error-message" id="addressError">Please enter your complete delivery address</div>
+  </div>
         
-        <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" required>
-          <div class="error-message" id="lastNameError">Please enter your last name</div>
-        </div>
-        
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" required>
-          <div class="error-message" id="phoneError">Please enter a valid phone number</div>
-        </div>
-        
-        <div class="form-group">
-  <label for="address">Delivery Address</label>
-  <textarea id="address" rows="3" required 
-    placeholder="Example: 123 Main Street, Apartment 4B, Igbe Road, Edo"></textarea>
-  <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
-    Please include your full address: house number, street, area, city, and state
-  </small>
-  <div class="error-message" id="addressError">Please enter your complete delivery address</div>
-</div>
-        
-        <div class="form-group">
-  <label for="city">City</label>
-  <input type="text" id="city" required placeholder="e.g. Edo, Lagos, Abuja">
-  <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
-    Enter your city or local government area
-  </small>
-  <div class="error-message" id="cityError">Please enter your city</div>
-</div>
+        <!-- City -->
+  <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" id="city" required placeholder="e.g. Edo, Lagos, Abuja">
+    <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+      Enter your city or local government area
+    </small>
+    <div class="error-message" id="cityError">Please enter your city</div>
+  </div>
           
-          <div class="form-group">
-  <label for="state">State of Residence</label>
-  <select id="state" required>
+          <!-- State -->
+  <div class="form-group">
+    <label for="state">State of Residence</label>
+    <select id="state" required>
     <option value="">Select Your State</option>
               <option value="Abuja FCT">Abuja FCT</option>
               <option value="Abia">Abia</option>
@@ -530,11 +622,14 @@
   <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
     Select the state where you want your order delivered
   </small>
-  <div class="error-message" id="stateError">Please select your state</div>
-</div>
+   <div class="error-message" id="stateError">Please select your state</div>
+  </div>
         
-        <button type="submit" class="btn" id="payButton" disabled>Proceed to Payment</button>
-      </form>
+         <!-- Payment Button -->
+  <button type="submit" class="btn" id="payButton" disabled style="padding: 1rem; font-size: 1.1rem;">
+    <i class="fas fa-lock"></i> Secure Payment
+  </button>
+</form>
       
       <div class="payment-success" id="paymentSuccess">
         <i class="fas fa-check-circle"></i>
