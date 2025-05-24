@@ -436,6 +436,17 @@
           <input type="email" id="email" required>
           <div class="error-message" id="emailError">Please enter a valid email address</div>
         </div>
+
+        <div style="background: var(--bg-darker); padding: 1rem; border-radius: 5px; margin-bottom: 1.5rem;">
+  <h3 style="margin-top: 0; color: var(--primary);">Delivery Instructions</h3>
+  <p style="margin-bottom: 0;">Please provide your complete delivery address to ensure smooth delivery. Include:</p>
+  <ul style="margin-top: 0.5rem;">
+    <li>House number and street name</li>
+    <li>Apartment/floor number (if applicable)</li>
+    <li>Landmark or area name</li>
+    <li>City and State</li>
+  </ul>
+</div>
         
         <div class="form-group">
           <label for="firstName">First Name</label>
@@ -456,22 +467,28 @@
         </div>
         
         <div class="form-group">
-          <label for="address">Delivery Address</label>
-          <textarea id="address" rows="3" required></textarea>
-          <div class="error-message" id="addressError">Please enter your delivery address</div>
-        </div>
+  <label for="address">Delivery Address</label>
+  <textarea id="address" rows="3" required 
+    placeholder="Example: 123 Main Street, Apartment 4B, Igbe Road, Edo"></textarea>
+  <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+    Please include your full address: house number, street, area, city, and state
+  </small>
+  <div class="error-message" id="addressError">Please enter your complete delivery address</div>
+</div>
         
-        <div class="form-row">
-          <div class="form-group">
-            <label for="city">City</label>
-            <input type="text" id="city" required>
-            <div class="error-message" id="cityError">Please enter your city</div>
-          </div>
+        <div class="form-group">
+  <label for="city">City</label>
+  <input type="text" id="city" required placeholder="e.g. Edo, Lagos, Abuja">
+  <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+    Enter your city or local government area
+  </small>
+  <div class="error-message" id="cityError">Please enter your city</div>
+</div>
           
           <div class="form-group">
-            <label for="state">State</label>
-            <select id="state" required>
-              <option value="">Select State</option>
+  <label for="state">State of Residence</label>
+  <select id="state" required>
+    <option value="">Select Your State</option>
               <option value="Abuja FCT">Abuja FCT</option>
               <option value="Abia">Abia</option>
               <option value="Adamawa">Adamawa</option>
@@ -509,10 +526,12 @@
               <option value="Taraba">Taraba</option>
               <option value="Yobe">Yobe</option>
               <option value="Zamfara">Zamfara</option>
-            </select>
-            <div class="error-message" id="stateError">Please select your state</div>
-          </div>
-        </div>
+             </select>
+  <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+    Select the state where you want your order delivered
+  </small>
+  <div class="error-message" id="stateError">Please select your state</div>
+</div>
         
         <button type="submit" class="btn" id="payButton" disabled>Proceed to Payment</button>
       </form>
