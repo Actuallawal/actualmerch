@@ -163,13 +163,13 @@
 
     /* Product Grid */
     .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);  /* 5 items per row */
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;  /* Increased from 1200px */
+  margin: 0 auto;
+}
 
     .product {
       background: var(--card-bg);
@@ -504,6 +504,19 @@
       color: var(--primary);
     }
 
+    /* Add a media query for medium screens to show 3-4 items */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .hero {
@@ -524,24 +537,18 @@
     }
 
     @media (max-width: 600px) {
-      .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        padding: 1rem;
-        gap: 1rem;
-      }
-      
-      .product {
-        padding: 0.8rem;
-    min-height: auto;
-      }
-
-      .product {
-    padding: 0.8rem;
-    min-height: auto; /* Remove any fixed height */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);  /* 2 items per row on mobile */
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .product {
+    padding: 0.5rem;
   }
   
   .product-image-container {
-    height: 120px; /* Smaller image container */
+    height: 180px;  /* Increased from 120px */
   }
   
   .product h3 {
@@ -728,7 +735,7 @@
       "#FFFFFF": "https://i.ibb.co/1YR7G2GQ/TopWH.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 2,
@@ -742,7 +749,7 @@
       "#FFFFFF": "https://i.ibb.co/1fmbxLMC/TopWC.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 3,
@@ -757,7 +764,7 @@
       "#23293f": "https://i.ibb.co/bMqfh3pQ/TopBlBB.jpg"
     },
     colors: ["#000000", "#FFFFFF", "#23293f"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 4,
@@ -771,7 +778,7 @@
       "#FFFFFF": "https://i.ibb.co/RGXVNjby/TankWH.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 5,
@@ -785,7 +792,7 @@
       "#FFFFFF": "https://i.ibb.co/qMxQtXZh/TankWC.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 6,
@@ -800,7 +807,7 @@
       "#23293f": "https://i.ibb.co/H3QVzpR/TankBlBB.jpg"
     },
     colors: ["#000000", "#FFFFFF", "#23293f"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 7,
@@ -814,7 +821,7 @@
       "#FFFFFF": "https://i.ibb.co/Rk1wNQW5/HoodieWC.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 8,
@@ -828,7 +835,7 @@
       "#FFFFFF": "https://i.ibb.co/rK0MSzc/HoodieWH.jpg"
     },
     colors: ["#000000", "#FFFFFF"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   },
   {
     id: 9,
@@ -843,7 +850,7 @@
       "#23293f": "https://i.ibb.co/21LTh6f3/Hoodie-Bl-BB.jpg"
     },
     colors: ["#000000", "#FFFFFF", "#23293f"],
-    sizes: ["L", "XL", "XXL"]
+    sizes: ["L", "XL", "2XL"]
   }
     ];
 
@@ -981,6 +988,7 @@
         "#FFFFFF": "White",
         "#FF0000": "Red",
         "#0000FF": "Blue",
+        "#23293f": "Navy Blue",
         "#008000": "Green",
         "#808080": "Gray",
         "#800000": "Maroon",
