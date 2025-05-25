@@ -473,6 +473,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 
 .whatsapp-float img {
@@ -513,7 +514,7 @@
   transition: all 0.3s ease;
 }
 
-.whatsapp-float:hover + .whatsapp-tooltip {
+.whatsapp-container:hover .whatsapp-tooltip {
   opacity: 1;
   visibility: visible;
 }
@@ -740,10 +741,10 @@
 
   <!-- WHATSAPP ICON -->
   <div class="whatsapp-container">
-  <div class="whatsapp-float" id="whatsappButton">
+  <a href="https://wa.me/+2348139354831?text=Hello%2C%20I%20need%20help%20with%20your%20website..." class="whatsapp-float" id="whatsappButton" target="_blank" rel="noopener noreferrer">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-  </div>
-  <div class="whatsapp-tooltip" id="whatsappTooltip">
+  </a>
+  <div class="whatsapp-tooltip">
     Need help? Message us!
   </div>
 </div>
