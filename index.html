@@ -454,6 +454,70 @@
       opacity: 1;
     }
 
+    /* WHATSAPP ICON */
+    .whatsapp-container {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 100;
+}
+
+.whatsapp-float {
+  width: 60px;
+  height: 60px;
+  background-color: #25d366;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.whatsapp-float img {
+  width: 40px;
+  height: 40px;
+}
+
+.whatsapp-tooltip {
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.whatsapp-tooltip:after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px 0 5px 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #333;
+}
+
+.whatsapp-float:hover {
+  background-color: #128C7E;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover + .whatsapp-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
     /* Loading Skeletons */
     @keyframes shimmer {
       0% { background-position: -468px 0 }
@@ -673,6 +737,16 @@
       </div>
     </div>
   </main>
+
+  <!-- WHATSAPP ICON -->
+  <div class="whatsapp-container">
+  <div class="whatsapp-float" id="whatsappButton">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+  </div>
+  <div class="whatsapp-tooltip" id="whatsappTooltip">
+    Need help? Message us!
+  </div>
+</div>
 
   <section class="testimonials">
     <h2>What Our Customers Say</h2>
@@ -1095,7 +1169,12 @@ function handleKeyDown(e) {
 
     function updateModalSize(productId, size) {
       selectSize(productId, size);
-      
+
+      // WHATSAPP ICON
+      document.getElementById('whatsappButton').addEventListener('click', function() {
+  window.open('https://wa.me/+2348139354831?text=Hello%20I%20need%20help%20with...', '_blank');
+});
+
       // Update selected size in modal
       document.querySelectorAll('#quickViewModal .size-option').forEach(option => {
         option.classList.remove('selected');
