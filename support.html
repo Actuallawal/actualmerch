@@ -9,44 +9,42 @@
   <script src="https://js.paystack.co/v1/inline.js"></script>
   <style>
     :root {
-      --primary: #ffc107;
-      --primary-dark: #e0a800;
-      --bg-dark: #111;
-      --bg-darker: #000;
-      --card-bg: #1a1a1a;
-      --text-light: #fff;
-      --text-muted: #bbb;
-      --border-color: #333;
-      --success: #00ff90;
+      --primary: #ffc107; /* Your signature golden yellow */
+      --primary-dark: #e0a800; /* Slightly darker gold */
+      --bg-light: #f9f9f9;
+      --bg-lighter: #fff;
+      --card-bg: #fff;
+      --text-dark: #333;
+      --text-muted: #666;
+      --border-color: #ddd;
+      --success: #00a86b;
     }
 
     body {
-     font-family: 'Baloo 2', cursive; /* Primary playful font */
+      font-family: 'Baloo 2', cursive;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-light);
+      background: var(--bg-light);
+      color: var(--text-dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     h1, h2, h3 {
-  font-family: 'Fredoka One', cursive; /* Thicker playful font */
-  /* OR */
-  /* font-family: 'Chewy', cursive; */ /* More rounded playful option */
-}
+      font-family: 'Fredoka One', cursive;
+    }
 
     header {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg-darker);
+      background: var(--bg-lighter);
       padding: 1rem;
       position: sticky;
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
     .logo-container {
@@ -66,7 +64,7 @@
 
     /* Hero Section */
     .hero {
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+      background: linear-gradient(rgba(255,193,7,0.8), rgba(255,193,7,0.9)), 
                   url('https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
       background-size: cover;
       background-position: center;
@@ -75,19 +73,9 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: white;
+      color: #333; /* Dark text for better contrast with gold */
       padding: 0 1rem;
       position: relative;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
     }
 
     .hero-content {
@@ -99,12 +87,13 @@
     .hero-content h1 {
       font-size: 3.5rem;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
     }
 
     .hero-content p {
       font-size: 1.5rem;
       margin-bottom: 2rem;
+      font-weight: 600;
     }
 
     /* Coffee Support Section */
@@ -120,7 +109,7 @@
       background: var(--card-bg);
       border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       border: 1px solid var(--border-color);
@@ -128,7 +117,7 @@
 
     .coffee-header {
       background: var(--primary);
-      color: #000;
+      color: #333; /* Dark text for gold background */
       padding: 1.5rem;
       text-align: center;
     }
@@ -160,7 +149,7 @@
       width: 100%;
       max-width: 300px;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       transition: transform 0.3s ease;
     }
 
@@ -181,7 +170,7 @@
     }
 
     .amount-option {
-      background: var(--bg-darker);
+      background: var(--bg-lighter);
       border: 2px solid var(--border-color);
       border-radius: 8px;
       padding: 1rem;
@@ -196,7 +185,7 @@
 
     .amount-option.selected {
       background: var(--primary);
-      color: #000;
+      color: #333;
       border-color: var(--primary);
       font-weight: bold;
     }
@@ -227,8 +216,8 @@
       padding: 0.75rem;
       border-radius: 8px;
       border: 2px solid var(--border-color);
-      background: var(--bg-darker);
-      color: var(--text-light);
+      background: var(--bg-lighter);
+      color: var(--text-dark);
       font-size: 1rem;
     }
 
@@ -239,7 +228,7 @@
 
     .btn {
       background: var(--primary);
-      color: #000;
+      color: #333;
       border: none;
       padding: 1rem 2rem;
       border-radius: 8px;
@@ -250,6 +239,7 @@
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     .btn:hover {
@@ -271,8 +261,8 @@
       padding: 0.75rem;
       border-radius: 8px;
       border: 2px solid var(--border-color);
-      background: var(--bg-darker);
-      color: var(--text-light);
+      background: var(--bg-lighter);
+      color: var(--text-dark);
       font-size: 1rem;
       min-height: 100px;
       resize: vertical;
@@ -286,7 +276,7 @@
     /* Testimonials */
     .testimonials {
       padding: 4rem 1rem;
-      background: var(--bg-darker);
+      background: var(--bg-lighter);
       text-align: center;
       margin-top: 3rem;
     }
@@ -294,6 +284,7 @@
     .testimonials h2 {
       margin-bottom: 3rem;
       font-size: 2rem;
+      color: var(--primary);
     }
 
     .testimonial-grid {
@@ -309,6 +300,8 @@
       padding: 2rem;
       border-radius: 10px;
       text-align: left;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
     }
 
     .testimonial-content {
@@ -344,26 +337,28 @@
     }
 
     .testimonial-author .author-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  font-size: 1.2rem;
-}
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: #333;
+      font-size: 1.2rem;
+    }
 
     /* Footer */
     footer {
       text-align: center;
       padding: 2rem;
-      background: var(--bg-darker);
+      background: #333;
+      color: #fff;
       margin-top: auto;
     }
 
     .social-icons a {
-      color: var(--text-muted);
+      color: #bbb;
       margin: 0 0.5rem;
       font-size: 1.5rem;
       transition: color 0.3s ease;
@@ -444,9 +439,9 @@
         <p>Show some love and keep the creativity flowing</p>
       </div>
       <div class="coffee-body">
-  <div class="coffee-image">
-    <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Coffee Cup" class="floating-coffee">
-  </div>
+        <div class="coffee-image">
+          <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Coffee Cup" class="floating-coffee">
+        </div>
         <div class="coffee-options">
           <h3>Select an amount</h3>
           <div class="amount-options">
@@ -494,11 +489,65 @@
     </div>
   </div>
 
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <h2>What Supporters Say</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>Supporting Actual Lawal's work has been one of the best decisions. The content keeps getting better!</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <h4>Chinedu O.</h4>
+            <p>Supporter</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>I love seeing my small contributions help create amazing animations. Worth every naira!</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <h4>Amina S.</h4>
+            <p>Monthly Supporter</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial">
+        <div class="testimonial-content">
+          <i class="fas fa-quote-left"></i>
+          <p>The VIP support tier gives such great perks. I get early access to all new content!</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div>
+            <h4>Tunde K.</h4>
+            <p>VIP Member</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer Section -->
   <footer>
     <div class="container">
       <p>&copy; 2025 Actual Lawal. All rights reserved.</p>
-      <div class="social-links">
+      <div class="social-icons">
         <a href="https://facebook.com/actuallawal" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://twitter.com/actuallawal" target="_blank"><i class="fab fa-twitter"></i></a>
         <a href="https://instagram.com/actuallawal" target="_blank"><i class="fab fa-instagram"></i></a>
