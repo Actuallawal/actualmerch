@@ -1,4 +1,13 @@
-<style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Lawal Merch</title>
+  <link rel="icon" href="https://i.ibb.co/PvnNSJTL/Kidnapped-Merch-head.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
     :root {
       --primary: #DBB12A;  /* Gold */
       --primary-dark: #AE8B0F;  /* Dark gold */
@@ -410,3 +419,210 @@
       animation: float 3s ease-in-out infinite;
     }
   </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="https://i.ibb.co/PvnNSJTL/Kidnapped-Merch-head.png" alt="Lawal Merch Logo" class="logo">
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Fuel the Creativity</h1>
+      <p>Your support helps us create more amazing content</p>
+    </div>
+  </section>
+
+  <div class="coffee-section">
+    <div class="coffee-card">
+      <div class="coffee-header">
+        <h2><i class="fas fa-mug-hot"></i> Buy Me a Coffee</h2>
+        <p>Show some love and keep the creativity flowing</p>
+      </div>
+      <div class="coffee-body">
+  <div class="coffee-image">
+    <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Coffee Cup" class="floating-coffee">
+  </div>
+        <div class="coffee-options">
+          <h3>Select an amount</h3>
+          <div class="amount-options">
+            <div class="amount-option" data-amount="1000" onclick="selectAmount(this)">
+              <h3>₦1,000</h3>
+              <p>Small Coffee</p>
+            </div>
+            <div class="amount-option" data-amount="3000" onclick="selectAmount(this)">
+              <h3>₦3,000</h3>
+              <p>Medium Coffee</p>
+            </div>
+            <div class="amount-option selected" data-amount="5000" onclick="selectAmount(this)">
+              <h3>₦5,000</h3>
+              <p>Large Coffee</p>
+            </div>
+            <div class="amount-option" data-amount="10000" onclick="selectAmount(this)">
+              <h3>₦10,000</h3>
+              <p>Coffee + Snack</p>
+            </div>
+            <div class="amount-option" data-amount="20000" onclick="selectAmount(this)">
+              <h3>₦20,000</h3>
+              <p>Coffee Feast</p>
+            </div>
+            <div class="amount-option" data-amount="50000" onclick="selectAmount(this)">
+              <h3>₦50,000</h3>
+              <p>VIP Support</p>
+            </div>
+          </div>
+          
+          <div class="custom-amount">
+            <label for="customAmount">Or enter custom amount (₦):</label>
+            <input type="number" id="customAmount" placeholder="e.g. 2500" min="100">
+          </div>
+          
+          <div class="message-input">
+            <label for="supportMessage">Add a message (optional):</label>
+            <textarea id="supportMessage" placeholder="Leave an encouraging note..."></textarea>
+          </div>
+          
+          <button class="btn" onclick="payWithPaystack()">
+            <i class="fas fa-coffee"></i> Support Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="testimonials">
+    <h2>What Supporters Say</h2>
+    <div class="testimonial-grid">
+  <!-- Testimonial 1 -->
+  <div class="testimonial">
+    <div class="testimonial-content">
+      <i class="fas fa-quote-left"></i>
+      <p>Your merch is fire! I get compliments whenever I wear them.</p>
+    </div>
+    <div class="testimonial-author">
+      <div class="author-icon" style="background: #ffc107;">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <span>Tunde L.</span>
+    </div>
+  </div>
+
+  <!-- Testimonial 2 -->
+  <div class="testimonial">
+    <div class="testimonial-content">
+      <i class="fas fa-quote-left"></i>
+      <p>Fast delivery, quality fabric. Worth every kobo!</p>
+    </div>
+    <div class="testimonial-author">
+      <div class="author-icon" style="background: #e0a800;">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <span>Amina K.</span>
+    </div>
+  </div>
+
+  <!-- Testimonial 3 -->
+  <div class="testimonial">
+    <div class="testimonial-content">
+      <i class="fas fa-quote-left"></i>
+      <p>Lawal’s designs stand out. I’m a customer for life!</p>
+    </div>
+    <div class="testimonial-author">
+      <div class="author-icon" style="background: #d4af37;">
+        <i class="fas fa-user-astronaut"></i>
+      </div>
+      <span>Emeka O.</span>
+    </div>
+  </div>
+</div>
+  </section>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://facebook.com/actuallawal" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://instagram.com/actuallawal" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://tiktok.com/@actuallawal" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://youtube.com/@actuallawal" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p style="color: var(--text-muted); margin-top: 1rem;">&copy; 2025 Lawal Merch. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Initialize selected amount
+    let selectedAmount = 5000;
+    
+    // Select amount function
+    function selectAmount(element) {
+      // Remove selected class from all options
+      document.querySelectorAll('.amount-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      
+      // Update selected amount
+      selectedAmount = parseInt(element.getAttribute('data-amount'));
+      
+      // Clear custom amount if any
+      document.getElementById('customAmount').value = '';
+    }
+    
+    // Pay with Paystack function
+    function payWithPaystack() {
+      // Check if custom amount is entered
+      const customAmount = document.getElementById('customAmount').value;
+      const amount = customAmount ? parseInt(customAmount) : selectedAmount;
+      
+      if (customAmount && amount < 100) {
+        alert('Minimum amount is ₦100');
+        return;
+      }
+      
+      const message = document.getElementById('supportMessage').value;
+      
+      // Replace with your Paystack public key
+      const paystackPublicKey = 'pk_live_bab837f46c02f8acfd170f322780645bd132f5fe';
+      
+      const handler = PaystackPop.setup({
+        key: paystackPublicKey,
+        email: 'customer@email.com', // You can collect this or use a default
+        amount: amount * 100, // Paystack uses kobo (multiply by 100)
+        currency: 'NGN',
+        ref: 'LM' + Math.floor(Math.random() * 1000000000 + 1),
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Support Message",
+              variable_name: "support_message",
+              value: message || "No message"
+            }
+          ]
+        },
+        callback: function(response) {
+          // On successful payment
+          alert('Thank you for your support! Your contribution means a lot.');
+          // You can redirect or show appreciation
+        },
+        onClose: function() {
+          // When user closes the payment modal
+          console.log('Payment window closed');
+        }
+      });
+      
+      handler.openIframe();
+    }
+    
+    // Listen for custom amount input
+    document.getElementById('customAmount').addEventListener('input', function() {
+      if (this.value) {
+        // Remove selected class from all options when custom amount is entered
+        document.querySelectorAll('.amount-option').forEach(option => {
+          option.classList.remove('selected');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
